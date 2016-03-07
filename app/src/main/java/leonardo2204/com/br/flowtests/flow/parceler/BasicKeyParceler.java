@@ -2,6 +2,9 @@ package leonardo2204.com.br.flowtests.flow.parceler;
 
 import android.os.Parcelable;
 
+import org.parceler.Parcel;
+import org.parceler.Parcels;
+
 import flow.KeyParceler;
 
 /**
@@ -11,6 +14,10 @@ public final class BasicKeyParceler implements KeyParceler {
 
     @Override
     public Parcelable toParcelable(Object key) {
+        if (key.getClass().isAnnotationPresent(Parcel.class)) {
+            return Parcels.wrap(key);
+        }
+
         return (Parcelable) key;
     }
 

@@ -4,6 +4,7 @@ package leonardo2204.com.br.flowtests.screen;
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
+import flow.ClassKey;
 import leonardo2204.com.br.flowtests.Layout;
 import leonardo2204.com.br.flowtests.R;
 import leonardo2204.com.br.flowtests.model.Contact;
@@ -13,7 +14,7 @@ import leonardo2204.com.br.flowtests.model.Contact;
  */
 @Layout(R.layout.screen_details)
 @Parcel
-public final class DetailsScreen {
+public final class DetailsScreen extends ClassKey {
     final Contact contact;
 
     @ParcelConstructor

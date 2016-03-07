@@ -1,8 +1,6 @@
 package leonardo2204.com.br.flowtests.screen;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
+import flow.ClassKey;
 import leonardo2204.com.br.flowtests.Layout;
 import leonardo2204.com.br.flowtests.R;
 
@@ -11,13 +9,9 @@ import leonardo2204.com.br.flowtests.R;
  */
 @Layout(R.layout.screen_first)
 @org.parceler.Parcel
-public class FirstScreen {
+public class FirstScreen extends ClassKey {
 
     public FirstScreen() {
     }
 
-    @Override
-    public boolean equals(Object o) {
-        return o != null && o instanceof FirstScreen;
-    }
 }
