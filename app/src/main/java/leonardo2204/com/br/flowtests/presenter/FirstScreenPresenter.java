@@ -1,20 +1,16 @@
 package leonardo2204.com.br.flowtests.presenter;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import java.util.List;
 
 import flow.Flow;
 import leonardo2204.com.br.flowtests.ContactsAdapter;
-import leonardo2204.com.br.flowtests.R;
 import leonardo2204.com.br.flowtests.domain.interactor.DefaultSubscriber;
 import leonardo2204.com.br.flowtests.domain.interactor.GetContacts;
-import leonardo2204.com.br.flowtests.domain.repository.ContactsRepository;
 import leonardo2204.com.br.flowtests.model.Contact;
 import leonardo2204.com.br.flowtests.screen.DetailsScreen;
-import leonardo2204.com.br.flowtests.screen.SecondScreen;
 import leonardo2204.com.br.flowtests.view.FirstView;
 import mortar.ViewPresenter;
 
@@ -24,17 +20,16 @@ import mortar.ViewPresenter;
 public class FirstScreenPresenter extends ViewPresenter<FirstView> {
 
     private final GetContacts getContacts;
-
-    public FirstScreenPresenter(GetContacts getContacts) {
-        this.getContacts = getContacts;
-    }
-
     private final FirstView.ContactListener contactListener = new FirstView.ContactListener() {
         @Override
         public void onClick(Contact contact) {
             Flow.get(getView()).set(new DetailsScreen(contact));
         }
     };
+
+    public FirstScreenPresenter(GetContacts getContacts) {
+        this.getContacts = getContacts;
+    }
 
     @Override
     protected void onLoad(Bundle savedInstanceState) {

@@ -10,22 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import flow.Direction;
 import flow.Dispatcher;
-import flow.Flow;
 import flow.Traversal;
 import flow.TraversalCallback;
 import leonardo2204.com.br.flowtests.Layout;
 import leonardo2204.com.br.flowtests.R;
 import leonardo2204.com.br.flowtests.flow.FlowUtils;
-import leonardo2204.com.br.flowtests.screen.FirstScreen;
-import leonardo2204.com.br.flowtests.screen.SecondScreen;
-import leonardo2204.com.br.flowtests.view.FirstView;
 
 /**
  * Created by Leonardo on 04/03/2016.
