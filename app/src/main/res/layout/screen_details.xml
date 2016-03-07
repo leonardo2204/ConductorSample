@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <leonardo2204.com.br.flowtests.view.DetailsView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <leonardo2204.com.br.flowtests.ui.EndDrawableTextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@android:drawable/ic_menu_edit"
+        android:drawableRight="@android:drawable/ic_menu_edit"
+        android:gravity="center_vertical" />
+
+    <leonardo2204.com.br.flowtests.ui.EndDrawableTextView
+        android:id="@+id/telephone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@android:drawable/ic_menu_edit"
+        android:drawableRight="@android:drawable/ic_menu_edit" />
 
 </leonardo2204.com.br.flowtests.view.DetailsView>

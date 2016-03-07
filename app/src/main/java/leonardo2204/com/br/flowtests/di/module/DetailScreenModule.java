@@ -6,7 +6,6 @@ import leonardo2204.com.br.flowtests.domain.executor.PostExecutionThread;
 import leonardo2204.com.br.flowtests.domain.executor.ThreadExecutor;
 import leonardo2204.com.br.flowtests.domain.interactor.GetDetailedContact;
 import leonardo2204.com.br.flowtests.domain.repository.ContactsRepository;
-import leonardo2204.com.br.flowtests.model.Contact;
 import leonardo2204.com.br.flowtests.presenter.DetailsScreenPresenter;
 
 /**
@@ -15,12 +14,6 @@ import leonardo2204.com.br.flowtests.presenter.DetailsScreenPresenter;
 @Module
 public class DetailScreenModule {
 
-    private final Contact contact;
-
-    public DetailScreenModule(Contact contact) {
-        this.contact = contact;
-    }
-
     @Provides
     public GetDetailedContact providesGetDetailedContact(ContactsRepository contactsRepository, ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
         return new GetDetailedContact(contactsRepository, threadExecutor, postExecutionThread);
@@ -28,7 +21,7 @@ public class DetailScreenModule {
 
     @Provides
     public DetailsScreenPresenter providesDetailsScreenPresenter(GetDetailedContact getDetailedContact) {
-        return new DetailsScreenPresenter(contact,getDetailedContact);
+        return new DetailsScreenPresenter(getDetailedContact);
     }
 
 }
