@@ -12,10 +12,7 @@ import butterknife.ButterKnife;
 import flow.Flow;
 import leonardo2204.com.br.flowtests.R;
 import leonardo2204.com.br.flowtests.di.DaggerService;
-import leonardo2204.com.br.flowtests.di.component.ActivityComponent;
-import leonardo2204.com.br.flowtests.di.component.DaggerDetailScreenComponent;
 import leonardo2204.com.br.flowtests.di.component.DetailScreenComponent;
-import leonardo2204.com.br.flowtests.di.module.DetailScreenModule;
 import leonardo2204.com.br.flowtests.presenter.DetailsScreenPresenter;
 import leonardo2204.com.br.flowtests.screen.DetailsScreen;
 import leonardo2204.com.br.flowtests.ui.EndDrawableTextView;
@@ -93,21 +90,7 @@ public class DetailsView extends LinearLayout {
     }
 
     private void initializeInjection(Context context) {
-        MortarScope scope = MortarScope.findChild(context,getClass().getName());
-        if(scope == null){
-
-            DetailScreenComponent component = DaggerDetailScreenComponent
-                    .builder()
-                    .activityComponent(DaggerService.<ActivityComponent>getDaggerComponent(context))
-                    .detailScreenModule(new DetailScreenModule())
-                    .build();
-
-            scope = MortarScope.getScope(context)
-                    .buildChild()
-                    .withService(DaggerService.SERVICE_NAME, component)
-                    .build(getClass().getName());
-        }
-
+        MortarScope scope = Flow.getService(Flow.getKey(this).getClass().getName(), context);
         DaggerService.<DetailScreenComponent>getDaggerComponent(scope.createContext(context)).inject(this);
     }
 

@@ -4,17 +4,17 @@ package leonardo2204.com.br.flowtests.screen;
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
-import flow.ClassKey;
-import leonardo2204.com.br.flowtests.Layout;
 import leonardo2204.com.br.flowtests.R;
+import leonardo2204.com.br.flowtests.di.component.ActivityComponent;
+import leonardo2204.com.br.flowtests.di.component.DaggerDetailScreenComponent;
+import leonardo2204.com.br.flowtests.di.module.DetailScreenModule;
 import leonardo2204.com.br.flowtests.model.Contact;
 
 /**
  * Created by Leonardo on 05/03/2016.
  */
-@Layout(R.layout.screen_details)
 @Parcel
-public final class DetailsScreen extends ClassKey {
+public final class DetailsScreen extends BaseScreen {
     final Contact contact;
 
     @ParcelConstructor
@@ -38,5 +38,19 @@ public final class DetailsScreen extends ClassKey {
     @Override
     public int hashCode() {
         return contact.hashCode();
+    }
+
+    @Override
+    public Object createComponent(Object parent) {
+        return DaggerDetailScreenComponent
+                .builder()
+                .activityComponent((ActivityComponent) parent)
+                .detailScreenModule(new DetailScreenModule())
+                .build();
+    }
+
+    @Override
+    public int layoutResId() {
+        return R.layout.screen_details;
     }
 }

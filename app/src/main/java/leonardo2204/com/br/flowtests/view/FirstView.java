@@ -10,12 +10,10 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import flow.Flow;
 import leonardo2204.com.br.flowtests.R;
 import leonardo2204.com.br.flowtests.di.DaggerService;
-import leonardo2204.com.br.flowtests.di.component.ActivityComponent;
-import leonardo2204.com.br.flowtests.di.component.DaggerFirstScreenComponent;
 import leonardo2204.com.br.flowtests.di.component.FirstScreenComponent;
-import leonardo2204.com.br.flowtests.di.module.FirstScreenModule;
 import leonardo2204.com.br.flowtests.model.Contact;
 import leonardo2204.com.br.flowtests.presenter.FirstScreenPresenter;
 import mortar.MortarScope;
@@ -33,35 +31,21 @@ public class FirstView extends FrameLayout {
 
     public FirstView(Context context) {
         super(context);
-        initUI(context);
+        inject(context);
     }
 
     public FirstView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initUI(context);
+        inject(context);
     }
 
     public FirstView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initUI(context);
+        inject(context);
     }
 
-    private void initUI(Context context) {
-        MortarScope scope = MortarScope.findChild(context,getClass().getName());
-        if(scope == null){
-
-            FirstScreenComponent component = DaggerFirstScreenComponent
-                    .builder()
-                    .activityComponent(DaggerService.<ActivityComponent>getDaggerComponent(context))
-                    .firstScreenModule(new FirstScreenModule())
-                    .build();
-
-            scope = MortarScope.getScope(context)
-                    .buildChild()
-                    .withService(DaggerService.SERVICE_NAME, component)
-                    .build(getClass().getName());
-        }
-
+    private void inject(Context context) {
+        MortarScope scope = Flow.getService(Flow.getKey(this).getClass().getName(), context);
         DaggerService.<FirstScreenComponent>getDaggerComponent(scope.createContext(context)).inject(this);
     }
 

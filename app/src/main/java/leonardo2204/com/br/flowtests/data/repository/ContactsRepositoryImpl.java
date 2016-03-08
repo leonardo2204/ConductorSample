@@ -88,7 +88,7 @@ public class ContactsRepositoryImpl implements ContactsRepository {
                     subscriber.onNext(contact);
                     subscriber.onCompleted();
                 }else{
-                    subscriber.onError(new Exception("No contacts were found"));
+                    subscriber.onError(new Exception("No telephones were found"));
                     subscriber.onCompleted();
                 }
 

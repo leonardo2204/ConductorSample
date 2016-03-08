@@ -10,24 +10,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.LinkedHashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import flow.Direction;
 import flow.Dispatcher;
 import flow.Traversal;
 import flow.TraversalCallback;
-import leonardo2204.com.br.flowtests.Layout;
 import leonardo2204.com.br.flowtests.R;
 import leonardo2204.com.br.flowtests.flow.FlowUtils;
+import leonardo2204.com.br.flowtests.screen.BaseScreen;
 
 /**
  * Created by Leonardo on 04/03/2016.
  */
 public final class BasicDispatcher implements Dispatcher {
 
-    private static Map<Class,Integer> LAYOUT_CACHE = new LinkedHashMap<>();
+    //private static Map<Class,Integer> LAYOUT_CACHE = new LinkedHashMap<>();
     private final Activity activity;
 
     public BasicDispatcher(Activity activity) {
@@ -48,7 +46,10 @@ public final class BasicDispatcher implements Dispatcher {
             }
         }
 
-        @LayoutRes final int layout = getLayout(dest);
+        if (!(dest instanceof BaseScreen))
+            throw new IllegalStateException(String.format(Locale.getDefault(), "The screen %s must implement BaseScreen", dest.getClass().getName()));
+
+        @LayoutRes final int layout = ((BaseScreen) dest).layoutResId();
 
         final View incomingView = LayoutInflater.from(traversal.createContext(dest,activity)).inflate(layout,frame,false);
 
@@ -76,22 +77,22 @@ public final class BasicDispatcher implements Dispatcher {
         }
     }
 
-    private int getLayout(Object screen) {
-        Class layoutScreen = screen.getClass();
-        Integer layoutId = LAYOUT_CACHE.get(layoutScreen);
-
-        if (layoutId != null)
-            return layoutId;
-
-        Layout layout = (Layout) layoutScreen.getAnnotation(Layout.class);
-        if(layout == null)
-            throw new RuntimeException(String.format(Locale.getDefault(),"Must annotate Screen with @Layout annotation on class %s",layoutScreen.getClass().getName()));
-
-        layoutId = layout.value();
-        LAYOUT_CACHE.put(layoutScreen, layoutId);
-
-        return layoutId;
-    }
+//    private int getLayout(Object screen) {
+//        Class layoutScreen = screen.getClass();
+//        Integer layoutId = LAYOUT_CACHE.get(layoutScreen);
+//
+//        if (layoutId != null)
+//            return layoutId;
+//
+//        Layout layout = (Layout) layoutScreen.getAnnotation(Layout.class);
+//        if(layout == null)
+//            throw new RuntimeException(String.format(Locale.getDefault(),"Must annotate Screen with @Layout annotation on class %s",layoutScreen.getClass().getName()));
+//
+//        layoutId = layout.value();
+//        LAYOUT_CACHE.put(layoutScreen, layoutId);
+//
+//        return layoutId;
+//    }
 
     private Animator createSegue(View from, View to, Direction direction) {
         boolean backward = direction == Direction.BACKWARD;
