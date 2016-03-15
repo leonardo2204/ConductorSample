@@ -24,12 +24,18 @@ public class ContactsRepositoryImpl implements ContactsRepository {
     }
 
     @Override
-    public Observable<List<Contact>> getContactsFromPhone() {
+    public Observable<List<Contact>> getContactsFromPhone(final boolean mustHaveNumber) {
         return Observable.create(new Observable.OnSubscribe<List<Contact>>() {
             @Override
             public void call(Subscriber<? super List<Contact>> subscriber) {
-                Cursor queryContacts = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
-                        null, null, null, ContactsContract.Contacts.DISPLAY_NAME + " ASC");
+                Cursor queryContacts;
+
+                if(mustHaveNumber)
+                    queryContacts = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
+                            null, ContactsContract.Contacts.HAS_PHONE_NUMBER + " > ?",new String[]{"0"}, ContactsContract.Contacts.DISPLAY_NAME + " ASC");
+                else
+                    queryContacts = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
+                            null, null, null, ContactsContract.Contacts.DISPLAY_NAME + " ASC");
 
                 if(queryContacts.getCount() > 0) {
                     List<Contact> contacts = new ArrayList<>(queryContacts.getColumnCount());

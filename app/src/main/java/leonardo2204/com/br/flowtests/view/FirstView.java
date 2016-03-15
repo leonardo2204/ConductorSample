@@ -1,15 +1,19 @@
 package leonardo2204.com.br.flowtests.view;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Switch;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import flow.Flow;
 import leonardo2204.com.br.flowtests.R;
 import leonardo2204.com.br.flowtests.di.DaggerService;
@@ -25,6 +29,8 @@ public class FirstView extends FrameLayout {
 
     @Bind(R.id.contacts_rv)
     public RecyclerView contacts_rv;
+
+    LinearLayoutManager linearLayoutManager;
 
     @Inject
     protected FirstScreenPresenter presenter;
@@ -46,7 +52,8 @@ public class FirstView extends FrameLayout {
 
     private void inject(Context context) {
         MortarScope scope = Flow.getService(Flow.getKey(this).getClass().getName(), context);
-        DaggerService.<FirstScreenComponent>getDaggerComponent(scope.createContext(context)).inject(this);
+        ((FirstScreenComponent)scope.getService(DaggerService.SERVICE_NAME)).inject(this);
+        //DaggerService.<FirstScreenComponent>getDaggerComponent(context).inject(this);
     }
 
     @Override
@@ -65,8 +72,13 @@ public class FirstView extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.bind(this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         this.contacts_rv.setLayoutManager(linearLayoutManager);
+    }
+
+    @OnCheckedChanged(R.id.switch_only_numbers)
+    public void onlyNumbersSwitched(Switch v, boolean isChecked) {
+        this.presenter.fetchContacts(isChecked);
     }
 
     public interface ContactListener {

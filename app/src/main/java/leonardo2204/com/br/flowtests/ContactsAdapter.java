@@ -1,12 +1,10 @@
 package leonardo2204.com.br.flowtests;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.List;
@@ -30,6 +28,11 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
 
     public void setContactListener(FirstView.ContactListener contactListener) {
         this.contactListener = contactListener;
+    }
+
+    public void clearAdapter() {
+        this.contacts.clear();
+        notifyDataSetChanged();
     }
 
     @Override

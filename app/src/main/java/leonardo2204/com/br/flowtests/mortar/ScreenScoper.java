@@ -1,7 +1,5 @@
 package leonardo2204.com.br.flowtests.mortar;
 
-import android.content.Context;
-
 import leonardo2204.com.br.flowtests.di.DaggerService;
 import leonardo2204.com.br.flowtests.flow.serviceFactory.InjectionComponent;
 import mortar.MortarScope;
@@ -11,16 +9,15 @@ import mortar.MortarScope;
  */
 public class ScreenScoper {
 
-    public MortarScope getScreenScope(Context context, String name, Object key) {
-        MortarScope parentScope = MortarScope.getScope(context);
-
+    public MortarScope getScreenScope(MortarScope parentScope, String name, Object key) {
         MortarScope childScope = parentScope.findChild(name);
 
         if (childScope != null)
             return childScope;
 
         if (!(key instanceof InjectionComponent)) {
-            throw new IllegalStateException("The screen (key) must implement InjectionComponent");
+            //throw new IllegalStateException(String.format(Locale.getDefault(),"The screen (%s) must implement InjectionComponent",key.getClass().getSimpleName()));
+            return null;
         }
 
         InjectionComponent screenComponent = (InjectionComponent) key;

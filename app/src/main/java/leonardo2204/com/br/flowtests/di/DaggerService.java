@@ -1,6 +1,5 @@
 package leonardo2204.com.br.flowtests.di;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 
 /**

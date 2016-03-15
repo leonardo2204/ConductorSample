@@ -1,9 +1,11 @@
 package leonardo2204.com.br.flowtests.flow.serviceFactory;
 
-import android.content.Context;
-
 import flow.Services;
 import flow.ServicesFactory;
+import flow.TreeKey;
+import leonardo2204.com.br.flowtests.di.DaggerService;
+import leonardo2204.com.br.flowtests.flow.keys.ContactsUIKey;
+import leonardo2204.com.br.flowtests.flow.keys.EditContactKey;
 import leonardo2204.com.br.flowtests.mortar.ScreenScoper;
 import mortar.MortarScope;
 
@@ -12,21 +14,38 @@ import mortar.MortarScope;
  */
 public class DaggerServiceFactory extends ServicesFactory {
 
-    private final Context context;
+    private final MortarScope parentScope;
+    private final ScreenScoper screenScoper;
 
-    public DaggerServiceFactory(Context context) {
-        this.context = context;
+    public DaggerServiceFactory(MortarScope parentScope) {
+        this.parentScope = parentScope;
+        this.screenScoper = new ScreenScoper();
     }
 
     @Override
     public void bindServices(Services.Binder services) {
-        ScreenScoper scoper = new ScreenScoper();
-        services.bind(services.getKey().getClass().getName(), scoper.getScreenScope(context, services.getKey().getClass().getName(), services.getKey()));
+        MortarScope scope = null;
+
+        if(services.getKey() instanceof ContactsUIKey) {
+            scope = parentScope;
+        }else if(services.getKey() instanceof EditContactKey) {
+            EditContactKey key = services.getKey();
+            scope = services.getService(key.getParentKey().getClass().getName());
+            scope = screenScoper.getScreenScope(scope, services.getKey().getClass().getName(), services.getKey());
+        }else{
+            scope = screenScoper.getScreenScope(parentScope, services.getKey().getClass().getName(), services.getKey());
+        }
+
+        if(scope != null)
+            services.bind(services.getKey().getClass().getName(), scope);
     }
 
     @Override
     public void tearDownServices(Services services) {
         super.tearDownServices(services);
-        services.<MortarScope>getService(services.getKey().getClass().getName()).destroy();
+        MortarScope scope = parentScope.findChild(services.getKey().getClass().getName());
+
+        if(scope != null)
+            scope.destroy();
     }
 }

@@ -13,8 +13,10 @@ import flow.Flow;
 import leonardo2204.com.br.flowtests.R;
 import leonardo2204.com.br.flowtests.di.DaggerService;
 import leonardo2204.com.br.flowtests.di.component.DetailScreenComponent;
+import leonardo2204.com.br.flowtests.di.component.FirstScreenComponent;
 import leonardo2204.com.br.flowtests.presenter.DetailsScreenPresenter;
 import leonardo2204.com.br.flowtests.screen.DetailsScreen;
+import leonardo2204.com.br.flowtests.screen.EditDialogScreen;
 import leonardo2204.com.br.flowtests.ui.EndDrawableTextView;
 import mortar.MortarScope;
 
@@ -63,12 +65,12 @@ public class DetailsView extends LinearLayout {
         super.onFinishInflate();
         ButterKnife.bind(this);
 
-        DetailsScreen screen = Flow.getKey(this);
+        final DetailsScreen screen = Flow.getKey(this);
         name.setText(screen.getContact().getName());
         name.setOnDrawableClickListener(new EndDrawableTextView.OnDrawableClickListener() {
             @Override
             public void onEndDrawableClick() {
-                Toast.makeText(getContext(), "Open Edit Name Dialog...", Toast.LENGTH_SHORT).show();
+                Flow.get(DetailsView.this).set(new EditDialogScreen(screen.getContact()));
             }
         });
 
@@ -91,7 +93,7 @@ public class DetailsView extends LinearLayout {
 
     private void initializeInjection(Context context) {
         MortarScope scope = Flow.getService(Flow.getKey(this).getClass().getName(), context);
-        DaggerService.<DetailScreenComponent>getDaggerComponent(scope.createContext(context)).inject(this);
+        ((DetailScreenComponent)scope.getService(DaggerService.SERVICE_NAME)).inject(this);
     }
 
 }

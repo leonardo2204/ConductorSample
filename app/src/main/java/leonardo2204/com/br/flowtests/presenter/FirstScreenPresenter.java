@@ -34,7 +34,25 @@ public class FirstScreenPresenter extends ViewPresenter<FirstView> {
     @Override
     protected void onLoad(Bundle savedInstanceState) {
         super.onLoad(savedInstanceState);
-        this.getContacts.execute(new GetContactsSubscriber());
+        this.getContacts.execute(new GetContactsSubscriber(), new Bundle(0));
+    }
+
+    @Override
+    protected void onExitScope() {
+        super.onExitScope();
+        this.getContacts.unsubscribe();
+    }
+
+    public void fetchContacts(boolean mustHaveNumber) {
+        if(getView() == null)
+            return;
+
+        ((ContactsAdapter)getView().contacts_rv.getAdapter()).clearAdapter();
+
+        Bundle bundle = new Bundle(1);
+
+        bundle.putBoolean("mustHaveNumber", mustHaveNumber);
+        this.getContacts.execute(new GetContactsSubscriber(), bundle);
     }
 
     class GetContactsSubscriber extends DefaultSubscriber<List<Contact>> {
@@ -50,7 +68,8 @@ public class FirstScreenPresenter extends ViewPresenter<FirstView> {
 
         @Override
         public void onError(Throwable e) {
-            Toast.makeText(getView().getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+            if(getView() != null)
+                Toast.makeText(getView().getContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
         }
     }
 

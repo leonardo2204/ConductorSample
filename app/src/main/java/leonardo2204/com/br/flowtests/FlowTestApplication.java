@@ -2,11 +2,14 @@ package leonardo2204.com.br.flowtests;
 
 import android.app.Application;
 
+import com.squareup.leakcanary.LeakCanary;
+
 import leonardo2204.com.br.flowtests.di.DaggerService;
 import leonardo2204.com.br.flowtests.di.component.AppComponent;
 import leonardo2204.com.br.flowtests.di.component.DaggerAppComponent;
 import leonardo2204.com.br.flowtests.di.module.AppModule;
 import mortar.MortarScope;
+import mortar.bundler.BundleServiceRunner;
 
 /**
  * Created by Leonardo on 05/03/2016.
@@ -22,6 +25,12 @@ public class FlowTestApplication extends Application {
         }
 
         return (mortarScope.hasService(name)) ? mortarScope.getService(name) : super.getSystemService(name);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        LeakCanary.install(this);
     }
 
     private void setupMortar(){

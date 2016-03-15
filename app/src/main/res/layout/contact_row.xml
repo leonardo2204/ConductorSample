@@ -5,13 +5,15 @@
     android:layout_height="wrap_content"
     android:divider="@drawable/linear_divider"
     android:orientation="vertical"
-    android:paddingBottom="4dp"
-    android:paddingTop="4dp"
+    android:layout_marginBottom="16dp"
+    android:layout_marginTop="16dp"
     android:showDividers="end">
 
     <TextView
+        android:gravity="start|center_vertical"
         android:id="@+id/contact_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="18sp"/>
 
 </LinearLayout>

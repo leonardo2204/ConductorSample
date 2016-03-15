@@ -1,13 +1,14 @@
 package leonardo2204.com.br.flowtests.di.module;
 
-import android.app.Activity;
 import android.app.Application;
+import android.content.ContentResolver;
 
 import dagger.Module;
 import dagger.Provides;
 import leonardo2204.com.br.flowtests.UIThread;
 import leonardo2204.com.br.flowtests.data.executor.JobExecutor;
 import leonardo2204.com.br.flowtests.data.repository.ContactsRepositoryImpl;
+import leonardo2204.com.br.flowtests.di.scope.ActivityScope;
 import leonardo2204.com.br.flowtests.di.scope.ApplicationScope;
 import leonardo2204.com.br.flowtests.domain.executor.PostExecutionThread;
 import leonardo2204.com.br.flowtests.domain.executor.ThreadExecutor;
@@ -47,6 +48,18 @@ public class AppModule {
     @ApplicationScope
     public PostExecutionThread providePostExecutionThread(UIThread uiThread) {
         return uiThread;
+    }
+
+    @Provides
+    @ApplicationScope
+    public ContentResolver providesContentResolver() {
+        return this.application.getContentResolver();
+    }
+
+    @Provides
+    @ApplicationScope
+    public ContactsRepository providesContactsRepository(ContentResolver contentResolver) {
+        return new ContactsRepositoryImpl(contentResolver);
     }
 
 

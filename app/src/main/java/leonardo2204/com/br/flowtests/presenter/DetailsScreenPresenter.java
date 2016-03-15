@@ -38,6 +38,12 @@ public class DetailsScreenPresenter extends ViewPresenter<DetailsView> {
         this.getDetailedContact.execute(new DetailedSubscriber(), bundle);
     }
 
+    @Override
+    protected void onExitScope() {
+        super.onExitScope();
+        this.getDetailedContact.unsubscribe();
+    }
+
     class DetailedSubscriber extends DefaultSubscriber<Contact> {
 
         @Override
@@ -49,8 +55,8 @@ public class DetailsScreenPresenter extends ViewPresenter<DetailsView> {
 
         @Override
         public void onError(Throwable e) {
-            Toast.makeText(getView().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            if(getView() != null)
+                Toast.makeText(getView().getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-
 }

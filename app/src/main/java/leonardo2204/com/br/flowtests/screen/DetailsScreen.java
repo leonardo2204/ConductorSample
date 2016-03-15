@@ -1,25 +1,32 @@
 package leonardo2204.com.br.flowtests.screen;
 
 
+import android.support.annotation.NonNull;
+
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
+import flow.TreeKey;
+import leonardo2204.com.br.flowtests.Layout;
 import leonardo2204.com.br.flowtests.R;
-import leonardo2204.com.br.flowtests.di.component.ActivityComponent;
+import leonardo2204.com.br.flowtests.di.component.AppComponent;
 import leonardo2204.com.br.flowtests.di.component.DaggerDetailScreenComponent;
 import leonardo2204.com.br.flowtests.di.module.DetailScreenModule;
+import leonardo2204.com.br.flowtests.flow.keys.ContactKey;
+import leonardo2204.com.br.flowtests.flow.keys.EditContactKey;
+import leonardo2204.com.br.flowtests.flow.serviceFactory.InjectionComponent;
 import leonardo2204.com.br.flowtests.model.Contact;
 
 /**
  * Created by Leonardo on 05/03/2016.
  */
 @Parcel
-public final class DetailsScreen extends BaseScreen {
-    final Contact contact;
+@Layout(R.layout.screen_details)
+public final class DetailsScreen extends ContactKey implements InjectionComponent<AppComponent>, TreeKey {
 
     @ParcelConstructor
     public DetailsScreen(Contact contact) {
-        this.contact = contact;
+        super(contact);
     }
 
     public Contact getContact() {
@@ -27,30 +34,17 @@ public final class DetailsScreen extends BaseScreen {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if(this == o) return true;
-        if(o == null || getClass() != o.getClass()) return false;
-
-        DetailsScreen screen = (DetailsScreen)o;
-        return contact.equals(screen.contact);
-    }
-
-    @Override
-    public int hashCode() {
-        return contact.hashCode();
-    }
-
-    @Override
-    public Object createComponent(Object parent) {
+    public Object createComponent(AppComponent parent) {
         return DaggerDetailScreenComponent
                 .builder()
-                .activityComponent((ActivityComponent) parent)
+                .appComponent(parent)
                 .detailScreenModule(new DetailScreenModule())
                 .build();
     }
 
+    @NonNull
     @Override
-    public int layoutResId() {
-        return R.layout.screen_details;
+    public Object getParentKey() {
+        return new EditContactKey(contact);
     }
 }
