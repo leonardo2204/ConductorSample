@@ -9,11 +9,8 @@ import android.support.v7.widget.Toolbar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import flow.Flow;
-import flow.KeyChanger;
 import flow.KeyDispatcher;
-import leonardo2204.com.br.flowtests.di.DaggerService;
 import leonardo2204.com.br.flowtests.flow.dispatcher.Changer;
-import leonardo2204.com.br.flowtests.flow.dispatcher.MortarDispatcher;
 import leonardo2204.com.br.flowtests.flow.parceler.BasicKeyParceler;
 import leonardo2204.com.br.flowtests.flow.serviceFactory.DaggerServiceFactory;
 import leonardo2204.com.br.flowtests.screen.FirstScreen;
@@ -56,11 +53,17 @@ public class RootActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_root);
         ButterKnife.bind(this);
-
         setSupportActionBar(toolbar);
+        BundleServiceRunner.getBundleServiceRunner(this).onCreate(savedInstanceState);
     }
 
-//    private void checkMortar() {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        BundleServiceRunner.getBundleServiceRunner(this).onSaveInstanceState(outState);
+    }
+
+    //    private void checkMortar() {
 //        mortarScope = MortarScope.findChild(getApplicationContext(),getClass().getName());
 //        if(mortarScope == null)
 //            setupMortar();

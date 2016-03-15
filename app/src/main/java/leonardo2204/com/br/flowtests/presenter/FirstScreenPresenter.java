@@ -34,7 +34,6 @@ public class FirstScreenPresenter extends ViewPresenter<FirstView> {
     @Override
     protected void onLoad(Bundle savedInstanceState) {
         super.onLoad(savedInstanceState);
-        this.getContacts.execute(new GetContactsSubscriber(), new Bundle(0));
     }
 
     @Override
@@ -47,7 +46,8 @@ public class FirstScreenPresenter extends ViewPresenter<FirstView> {
         if(getView() == null)
             return;
 
-        ((ContactsAdapter)getView().contacts_rv.getAdapter()).clearAdapter();
+        if (getView().contacts_rv.getAdapter() != null)
+            ((ContactsAdapter) getView().contacts_rv.getAdapter()).clearAdapter();
 
         Bundle bundle = new Bundle(1);
 
