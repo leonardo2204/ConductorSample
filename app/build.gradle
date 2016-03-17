@@ -12,7 +12,18 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
+        // Gradle Plugin 1.5
+        // disable limited support for vector drawables fro Android Studio 1.4
+        generatedDensities = []
     }
+
+    // Gradle Plugin 1.5
+    // disable limited support for vector drawables fro Android Studio 1.4
+    aaptOptions {
+        additionalParameters "--no-version-vectors"
+    }
+
     buildTypes {
         release {
             minifyEnabled false

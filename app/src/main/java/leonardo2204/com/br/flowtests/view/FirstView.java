@@ -7,13 +7,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
-import android.widget.Switch;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import flow.Flow;
 import leonardo2204.com.br.flowtests.R;
 import leonardo2204.com.br.flowtests.di.DaggerService;
@@ -29,8 +27,10 @@ public class FirstView extends FrameLayout {
 
     @Bind(R.id.contacts_rv)
     public RecyclerView contacts_rv;
+
     @Inject
     protected FirstScreenPresenter presenter;
+
     LinearLayoutManager linearLayoutManager;
     boolean mustHaveNumber;
 
@@ -99,11 +99,11 @@ public class FirstView extends FrameLayout {
         this.contacts_rv.setLayoutManager(linearLayoutManager);
     }
 
-    @OnCheckedChanged(R.id.switch_only_numbers)
-    public void onlyNumbersSwitched(Switch v, boolean isChecked) {
-        this.presenter.fetchContacts(isChecked);
-        this.mustHaveNumber = isChecked;
-    }
+//    @OnCheckedChanged(R.id.switch_only_numbers)
+//    public void onlyNumbersSwitched(Switch v, boolean isChecked) {
+//        this.presenter.fetchContacts(isChecked);
+//        this.mustHaveNumber = isChecked;
+//    }
 
     public interface ContactListener {
         void onClick(Contact contact);
