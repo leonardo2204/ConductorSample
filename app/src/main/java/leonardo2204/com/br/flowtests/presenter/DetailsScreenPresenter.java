@@ -1,6 +1,7 @@
 package leonardo2204.com.br.flowtests.presenter;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import org.parceler.Parcels;
@@ -8,6 +9,7 @@ import org.parceler.Parcels;
 import javax.inject.Inject;
 
 import flow.Flow;
+import leonardo2204.com.br.flowtests.R;
 import leonardo2204.com.br.flowtests.di.DaggerScope;
 import leonardo2204.com.br.flowtests.di.component.DetailScreenComponent;
 import leonardo2204.com.br.flowtests.domain.interactor.DefaultSubscriber;
@@ -42,6 +44,14 @@ public class DetailsScreenPresenter extends ViewPresenter<DetailsView> {
         bundle.putParcelable("contact", Parcels.wrap(contact));
         this.getDetailedContact.execute(new DetailedSubscriber(), bundle);
         this.toolbarPresenter.setTitle(contact.getName());
+        this.toolbarPresenter.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        this.toolbarPresenter.setNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //noinspection CheckResult
+                Flow.get(getView()).goBack();
+            }
+        });
     }
 
     @Override
@@ -55,7 +65,7 @@ public class DetailsScreenPresenter extends ViewPresenter<DetailsView> {
         @Override
         public void onNext(Contact contact) {
             if (getView() != null) {
-                getView().setTelephoneField(contact.getTelephone().get(0));
+                getView().setTelephoneField(contact.getTelephone());
             }
         }
 

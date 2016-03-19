@@ -1,15 +1,15 @@
-package leonardo2204.com.br.flowtests.ui;
+package leonardo2204.com.br.flowtests.custom.view;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 
 /**
  * Created by Leonardo on 07/03/2016.
  */
-public class EndDrawableTextView extends TextView {
+public class EndDrawableTextView extends AppCompatTextView {
 
     private OnDrawableClickListener onDrawableClickListener;
 

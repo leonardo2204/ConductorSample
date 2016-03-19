@@ -1,10 +1,15 @@
 package leonardo2204.com.br.flowtests.view;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.TextView;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -12,13 +17,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import flow.Flow;
 import leonardo2204.com.br.flowtests.R;
+import leonardo2204.com.br.flowtests.custom.view.EndDrawableTextView;
+import leonardo2204.com.br.flowtests.custom.view.MultiEditableTextView;
 import leonardo2204.com.br.flowtests.di.DaggerService;
 import leonardo2204.com.br.flowtests.di.component.DetailScreenComponent;
 import leonardo2204.com.br.flowtests.presenter.DetailsScreenPresenter;
 import leonardo2204.com.br.flowtests.presenter.ToolbarPresenter;
 import leonardo2204.com.br.flowtests.screen.DetailsScreen;
 import leonardo2204.com.br.flowtests.screen.EditDialogScreen;
-import leonardo2204.com.br.flowtests.ui.EndDrawableTextView;
 import mortar.MortarScope;
 
 /**
@@ -32,8 +38,10 @@ public class DetailsView extends LinearLayout {
     protected ToolbarPresenter toolbarPresenter;
     @Bind(R.id.name)
     EndDrawableTextView name;
-    @Bind(R.id.telephone)
-    EndDrawableTextView telephone;
+    @Bind(R.id.telephone_header)
+    TextView telephoneHeader;
+    @Bind(R.id.multi_telephone)
+    MultiEditableTextView telephone;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
@@ -71,6 +79,8 @@ public class DetailsView extends LinearLayout {
         super.onFinishInflate();
         ButterKnife.bind(this);
 
+        ViewCompat.setBackgroundTintList(telephoneHeader, ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorAccent)));
+
         final DetailsScreen screen = Flow.getKey(this);
         name.setText(screen.getContact().getName());
         name.setOnDrawableClickListener(new EndDrawableTextView.OnDrawableClickListener() {
@@ -80,16 +90,16 @@ public class DetailsView extends LinearLayout {
             }
         });
 
-        telephone.setOnDrawableClickListener(new EndDrawableTextView.OnDrawableClickListener() {
-            @Override
-            public void onEndDrawableClick() {
-                Toast.makeText(getContext(), "Open Edit Phone Dialog...", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        telephone.setOnDrawableClickListener(new EndDrawableTextView.OnDrawableClickListener() {
+//            @Override
+//            public void onEndDrawableClick() {
+//                Toast.makeText(getContext(), "Open Edit Phone Dialog...", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
-    public void setTelephoneField(String telephoneNumber) {
-        telephone.setText(telephoneNumber);
+    public void setTelephoneField(List<String> telephoneNumberList) {
+        telephone.addItems(telephoneNumberList);
     }
 
     private void initUI(Context context) {
