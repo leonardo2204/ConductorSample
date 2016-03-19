@@ -1,6 +1,7 @@
 package leonardo2204.com.br.flowtests.view;
 
 import android.content.Context;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -13,8 +14,8 @@ import flow.Flow;
 import leonardo2204.com.br.flowtests.R;
 import leonardo2204.com.br.flowtests.di.DaggerService;
 import leonardo2204.com.br.flowtests.di.component.DetailScreenComponent;
-import leonardo2204.com.br.flowtests.di.component.FirstScreenComponent;
 import leonardo2204.com.br.flowtests.presenter.DetailsScreenPresenter;
+import leonardo2204.com.br.flowtests.presenter.ToolbarPresenter;
 import leonardo2204.com.br.flowtests.screen.DetailsScreen;
 import leonardo2204.com.br.flowtests.screen.EditDialogScreen;
 import leonardo2204.com.br.flowtests.ui.EndDrawableTextView;
@@ -25,13 +26,16 @@ import mortar.MortarScope;
  */
 public class DetailsView extends LinearLayout {
 
+    @Inject
+    protected DetailsScreenPresenter presenter;
+    @Inject
+    protected ToolbarPresenter toolbarPresenter;
     @Bind(R.id.name)
     EndDrawableTextView name;
     @Bind(R.id.telephone)
     EndDrawableTextView telephone;
-
-    @Inject
-    DetailsScreenPresenter presenter;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     public DetailsView(Context context) {
         super(context);
@@ -51,11 +55,13 @@ public class DetailsView extends LinearLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        toolbarPresenter.takeView(toolbar);
         presenter.takeView(this);
     }
 
     @Override
     protected void onDetachedFromWindow() {
+        toolbarPresenter.dropView(toolbar);
         presenter.dropView(this);
         super.onDetachedFromWindow();
     }

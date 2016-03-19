@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -24,16 +23,14 @@ import flow.TraversalCallback;
 import leonardo2204.com.br.flowtests.Layout;
 import leonardo2204.com.br.flowtests.R;
 import leonardo2204.com.br.flowtests.flow.FlowUtils;
-import leonardo2204.com.br.flowtests.flow.serviceFactory.InjectionComponent;
-import mortar.MortarScope;
 
 /**
  * Created by Leonardo on 08/03/2016.
  */
 public class Changer implements KeyChanger {
 
-    private final Activity activity;
     private static Map<Class,Integer> LAYOUT_CACHE = new LinkedHashMap<>();
+    private final Activity activity;
 
     public Changer(Activity activity) {
         this.activity = activity;
@@ -69,7 +66,7 @@ public class Changer implements KeyChanger {
             frame.removeAllViews();
             frame.addView(incomingView);
             callback.onTraversalCompleted();
-        }else {
+        } else {
             frame.addView(incomingView);
             final View fromViewFinal = fromView;
             FlowUtils.waitForMeasure(incomingView, new FlowUtils.OnMeasuredCallback() {

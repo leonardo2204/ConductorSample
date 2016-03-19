@@ -3,17 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:divider="@drawable/linear_divider"
-    android:orientation="vertical"
     android:layout_marginBottom="16dp"
     android:layout_marginTop="16dp"
+    android:divider="@drawable/linear_divider"
+    android:gravity="center_vertical|start"
+    android:orientation="vertical"
     android:showDividers="end">
 
     <TextView
-        android:gravity="start|center_vertical"
         android:id="@+id/contact_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="TESTE"
         android:textSize="18sp"/>
 
 </LinearLayout>

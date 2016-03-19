@@ -3,12 +3,8 @@ package leonardo2204.com.br.flowtests;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.widget.FrameLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,12 +22,8 @@ import mortar.bundler.BundleServiceRunner;
  */
 public class RootActivity extends AppCompatActivity {
 
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
-    @Bind(R.id.drawer_layout)
-    DrawerLayout drawerLayout;
-    @Bind(R.id.navigation)
-    NavigationView navigationView;
+    @Bind(R.id.content)
+    FrameLayout content;
 
     private MortarScope mortarScope;
 
@@ -66,15 +58,15 @@ public class RootActivity extends AppCompatActivity {
     }
 
     private void setupUI() {
-        setSupportActionBar(toolbar);
-        ViewCompat.setElevation(toolbar, 5f);
-        toolbar.setNavigationIcon(R.drawable.ic_menu_black_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.openDrawer(navigationView);
-            }
-        });
+        //setSupportActionBar(toolbar);
+        //ViewCompat.setElevation(toolbar, 5f);
+        //toolbar.setNavigationIcon(R.drawable.ic_menu_black_24dp);
+        //toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View v) {
+        //        drawerLayout.openDrawer(navigationView);
+        //    }
+        //});
     }
 
 
@@ -98,13 +90,13 @@ public class RootActivity extends AppCompatActivity {
                     .withService(BundleServiceRunner.SERVICE_NAME, new BundleServiceRunner())
                     .build(getClass().getName());
         }
-}
+    }
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(navigationView))
-            drawerLayout.closeDrawer(navigationView);
-        else if (!Flow.get(this).goBack())
+        //if (drawerLayout.isDrawerOpen(navigationView))
+        //  drawerLayout.closeDrawer(navigationView);
+        if (!Flow.get(this).goBack())
             super.onBackPressed();
     }
 }

@@ -1,5 +1,7 @@
 package leonardo2204.com.br.flowtests.di.component;
 
+import android.content.SharedPreferences;
+
 import dagger.Component;
 import leonardo2204.com.br.flowtests.FlowTestApplication;
 import leonardo2204.com.br.flowtests.UIThread;
@@ -19,4 +21,6 @@ public interface AppComponent {
     UIThread uiThread();
     ThreadExecutor threadExecutor();
     ContactsRepository contactsRepository();
+
+    SharedPreferences sharedPreferences();
 }
