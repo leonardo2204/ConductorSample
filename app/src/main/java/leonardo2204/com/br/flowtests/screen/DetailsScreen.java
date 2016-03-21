@@ -9,10 +9,10 @@ import org.parceler.ParcelConstructor;
 import flow.TreeKey;
 import leonardo2204.com.br.flowtests.Layout;
 import leonardo2204.com.br.flowtests.R;
-import leonardo2204.com.br.flowtests.di.component.AppComponent;
+import leonardo2204.com.br.flowtests.di.component.ActivityComponent;
 import leonardo2204.com.br.flowtests.di.component.DaggerDetailScreenComponent;
 import leonardo2204.com.br.flowtests.di.module.DetailScreenModule;
-import leonardo2204.com.br.flowtests.flow.keys.ContactKey;
+import leonardo2204.com.br.flowtests.flow.keys.DetailsKey;
 import leonardo2204.com.br.flowtests.flow.keys.EditContactKey;
 import leonardo2204.com.br.flowtests.flow.serviceFactory.InjectionComponent;
 import leonardo2204.com.br.flowtests.model.Contact;
@@ -22,7 +22,7 @@ import leonardo2204.com.br.flowtests.model.Contact;
  */
 @Parcel
 @Layout(R.layout.screen_details)
-public final class DetailsScreen extends ContactKey implements InjectionComponent<AppComponent>, TreeKey {
+public final class DetailsScreen extends DetailsKey implements InjectionComponent<ActivityComponent>, TreeKey {
 
     @ParcelConstructor
     public DetailsScreen(Contact contact) {
@@ -34,10 +34,10 @@ public final class DetailsScreen extends ContactKey implements InjectionComponen
     }
 
     @Override
-    public Object createComponent(AppComponent parent) {
+    public Object createComponent(ActivityComponent parent) {
         return DaggerDetailScreenComponent
                 .builder()
-                .appComponent(parent)
+                .activityComponent(parent)
                 .detailScreenModule(new DetailScreenModule())
                 .build();
     }

@@ -51,7 +51,7 @@ public abstract class UseCase {
     /**
      * Executes the current use case.
      *
-     * @param UseCaseSubscriber The guy who will be listen to the observable build with {@link #buildUseCaseObservable()}.
+     * @param UseCaseSubscriber The guy who will be listen to the observable withAction with {@link #buildUseCaseObservable()}.
      */
     @SuppressWarnings("unchecked")
     public void execute(Subscriber UseCaseSubscriber) {

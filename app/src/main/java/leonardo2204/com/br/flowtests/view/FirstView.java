@@ -3,13 +3,10 @@ package leonardo2204.com.br.flowtests.view;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
+import android.widget.FrameLayout;
 
 import javax.inject.Inject;
 
@@ -21,27 +18,19 @@ import leonardo2204.com.br.flowtests.di.DaggerService;
 import leonardo2204.com.br.flowtests.di.component.FirstScreenComponent;
 import leonardo2204.com.br.flowtests.model.Contact;
 import leonardo2204.com.br.flowtests.presenter.FirstScreenPresenter;
-import leonardo2204.com.br.flowtests.presenter.NavigationPresenter;
-import leonardo2204.com.br.flowtests.presenter.ToolbarPresenter;
 import mortar.MortarScope;
 
 /**
  * Created by Leonardo on 04/03/2016.
  */
-public class FirstView extends DrawerLayout {
+public class FirstView extends FrameLayout {
 
     @Bind(R.id.contacts_rv)
     public RecyclerView contacts_rv;
-    @Bind(R.id.navigation)
-    public NavigationView navigationView;
     @Inject
     protected FirstScreenPresenter presenter;
-    @Inject
-    protected ToolbarPresenter toolbarPresenter;
-    @Inject
-    protected NavigationPresenter navigationPresenter;
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    //    @Inject
+//    protected NavigationPresenter navigationPresenter;
     LinearLayoutManager linearLayoutManager;
     boolean mustHaveNumber;
 
@@ -92,16 +81,16 @@ public class FirstView extends DrawerLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        toolbarPresenter.takeView(toolbar);
-        navigationPresenter.takeView(navigationView);
+        //toolbarPresenter.takeView(toolbar);
+        //navigationPresenter.takeView(navigationView);
         presenter.takeView(this);
         presenter.fetchContacts(mustHaveNumber);
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        toolbarPresenter.dropView(toolbar);
-        navigationPresenter.dropView(navigationView);
+        //toolbarPresenter.dropView(toolbar);
+        //navigationPresenter.dropView(navigationView);
         presenter.dropView(this);
         super.onDetachedFromWindow();
     }
@@ -114,9 +103,10 @@ public class FirstView extends DrawerLayout {
     }
 
     private void setupUI() {
+        this.setFitsSystemWindows(true);
         linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         this.contacts_rv.setLayoutManager(linearLayoutManager);
-        ViewCompat.setElevation(toolbar, 5f);
+        // ViewCompat.setElevation(toolbar, 5f);
 
     }
 

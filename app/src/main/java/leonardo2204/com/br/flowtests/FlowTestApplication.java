@@ -9,7 +9,6 @@ import leonardo2204.com.br.flowtests.di.component.AppComponent;
 import leonardo2204.com.br.flowtests.di.component.DaggerAppComponent;
 import leonardo2204.com.br.flowtests.di.module.AppModule;
 import mortar.MortarScope;
-import mortar.bundler.BundleServiceRunner;
 
 /**
  * Created by Leonardo on 05/03/2016.
@@ -34,7 +33,6 @@ public class FlowTestApplication extends Application {
     }
 
     private void setupMortar(){
-
         AppComponent component = DaggerAppComponent
                 .builder()
                 .appModule(new AppModule(this))

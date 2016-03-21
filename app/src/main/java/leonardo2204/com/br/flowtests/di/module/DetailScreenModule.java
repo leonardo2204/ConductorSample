@@ -2,14 +2,14 @@ package leonardo2204.com.br.flowtests.di.module;
 
 import dagger.Module;
 import dagger.Provides;
-import leonardo2204.com.br.flowtests.di.DaggerScope;
 import leonardo2204.com.br.flowtests.di.component.DetailScreenComponent;
+import leonardo2204.com.br.flowtests.di.scope.DaggerScope;
 import leonardo2204.com.br.flowtests.domain.executor.PostExecutionThread;
 import leonardo2204.com.br.flowtests.domain.executor.ThreadExecutor;
 import leonardo2204.com.br.flowtests.domain.interactor.GetDetailedContact;
 import leonardo2204.com.br.flowtests.domain.repository.ContactsRepository;
+import leonardo2204.com.br.flowtests.presenter.ActionBarOwner;
 import leonardo2204.com.br.flowtests.presenter.DetailsScreenPresenter;
-import leonardo2204.com.br.flowtests.presenter.ToolbarPresenter;
 
 /**
  * Created by Leonardo on 05/03/2016.
@@ -25,14 +25,7 @@ public class DetailScreenModule {
 
     @Provides
     @DaggerScope(DetailScreenComponent.class)
-    public DetailsScreenPresenter providesDetailsScreenPresenter(GetDetailedContact getDetailedContact, ToolbarPresenter toolbarPresenter) {
-        return new DetailsScreenPresenter(getDetailedContact, toolbarPresenter);
+    public DetailsScreenPresenter providesDetailsScreenPresenter(GetDetailedContact getDetailedContact, ActionBarOwner actionBarOwner) {
+        return new DetailsScreenPresenter(getDetailedContact, actionBarOwner);
     }
-
-    @Provides
-    @DaggerScope(DetailScreenComponent.class)
-    public ToolbarPresenter providesToolbarPresenter() {
-        return new ToolbarPresenter();
-    }
-
 }

@@ -1,10 +1,6 @@
 package leonardo2204.com.br.flowtests.view;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,7 +18,6 @@ import leonardo2204.com.br.flowtests.custom.view.MultiEditableTextView;
 import leonardo2204.com.br.flowtests.di.DaggerService;
 import leonardo2204.com.br.flowtests.di.component.DetailScreenComponent;
 import leonardo2204.com.br.flowtests.presenter.DetailsScreenPresenter;
-import leonardo2204.com.br.flowtests.presenter.ToolbarPresenter;
 import leonardo2204.com.br.flowtests.screen.DetailsScreen;
 import leonardo2204.com.br.flowtests.screen.EditDialogScreen;
 import mortar.MortarScope;
@@ -34,16 +29,12 @@ public class DetailsView extends LinearLayout {
 
     @Inject
     protected DetailsScreenPresenter presenter;
-    @Inject
-    protected ToolbarPresenter toolbarPresenter;
     @Bind(R.id.name)
     EndDrawableTextView name;
     @Bind(R.id.telephone_header)
     TextView telephoneHeader;
     @Bind(R.id.multi_telephone)
     MultiEditableTextView telephone;
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
 
     public DetailsView(Context context) {
         super(context);
@@ -63,13 +54,11 @@ public class DetailsView extends LinearLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        toolbarPresenter.takeView(toolbar);
         presenter.takeView(this);
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        toolbarPresenter.dropView(toolbar);
         presenter.dropView(this);
         super.onDetachedFromWindow();
     }
@@ -79,7 +68,7 @@ public class DetailsView extends LinearLayout {
         super.onFinishInflate();
         ButterKnife.bind(this);
 
-        ViewCompat.setBackgroundTintList(telephoneHeader, ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorAccent)));
+        //ViewCompat.setBackgroundTintList(telephoneHeader, ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorAccent)));
 
         final DetailsScreen screen = Flow.getKey(this);
         name.setText(screen.getContact().getName());

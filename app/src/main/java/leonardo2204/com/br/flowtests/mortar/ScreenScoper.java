@@ -1,5 +1,6 @@
 package leonardo2204.com.br.flowtests.mortar;
 
+import leonardo2204.com.br.flowtests.RootActivity;
 import leonardo2204.com.br.flowtests.di.DaggerService;
 import leonardo2204.com.br.flowtests.flow.serviceFactory.InjectionComponent;
 import mortar.MortarScope;
@@ -10,6 +11,8 @@ import mortar.MortarScope;
 public class ScreenScoper {
 
     public MortarScope getScreenScope(MortarScope parentScope, String name, Object key) {
+
+        parentScope = parentScope.findChild(RootActivity.class.getName());
         MortarScope childScope = parentScope.findChild(name);
 
         if (childScope != null)

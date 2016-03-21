@@ -17,9 +17,13 @@ import leonardo2204.com.br.flowtests.view.FirstView;
 /**
  * Created by Leonardo on 05/03/2016.
  */
-public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactsViewHolder> {
+public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private final static int HEADER_VIEW = 1;
+    private final static int CONTACT_VIEW = 2;
     private final List<Contact> contacts;
+    int headerCount = 0;
+    Character previousChar;
     private FirstView.ContactListener contactListener;
 
     public ContactsAdapter(@NonNull List<Contact> contacts) {
@@ -36,21 +40,51 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
     }
 
     @Override
-    public ContactsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ContactsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_row, parent, false));
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == CONTACT_VIEW)
+            return new ContactsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_row, parent, false));
+        else if (viewType == HEADER_VIEW)
+            return new HeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_header, parent, false));
+        else
+            throw new IllegalStateException("Type not declared");
     }
 
     @Override
-    public void onBindViewHolder(ContactsViewHolder holder, final int position) {
-        holder.name.setText(contacts.get(position).getName());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(ContactsAdapter.this.contactListener != null) {
-                    ContactsAdapter.this.contactListener.onClick(contacts.get(position));
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        final Contact contact = contacts.get(position);
+
+        if (holder instanceof ContactsViewHolder) {
+            ((ContactsViewHolder) holder).name.setText(contact.getName());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (ContactsAdapter.this.contactListener != null) {
+                        ContactsAdapter.this.contactListener.onClick(contact);
+                    }
                 }
-            }
-        });
+            });
+
+        } else if (holder instanceof HeaderViewHolder) {
+            ((HeaderViewHolder) holder).initialLetter.setText(String.valueOf(contact.getName().charAt(0)));
+            ++headerCount;
+        } else {
+            throw new IllegalStateException("Type not declared");
+        }
+
+        previousChar = contact.getName().charAt(0);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+//        if(isHeaderView(position)){
+//            return HEADER_VIEW;
+//        }else{
+        return CONTACT_VIEW;
+        //   }
+    }
+
+    private boolean isHeaderView(final int position) {
+        return position == 0 || (position == getItemCount() - 1 || contacts.get(position).getName().charAt(0) != contacts.get(position + 1).getName().charAt(0));
     }
 
     @Override
@@ -64,6 +98,17 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
         TextView name;
 
         public ContactsViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    static class HeaderViewHolder extends RecyclerView.ViewHolder {
+
+        @Bind(R.id.initial_letter)
+        TextView initialLetter;
+
+        public HeaderViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

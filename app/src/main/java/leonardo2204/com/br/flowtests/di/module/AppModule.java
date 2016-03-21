@@ -69,5 +69,4 @@ public class AppModule {
     public SharedPreferences providesSharedPreferences() {
         return this.application.getSharedPreferences(SHARED_NAME, Context.MODE_PRIVATE);
     }
-
 }

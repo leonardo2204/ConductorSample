@@ -1,26 +1,24 @@
 package leonardo2204.com.br.flowtests.presenter;
 
 import android.os.Bundle;
-import android.support.v7.widget.SwitchCompat;
-import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import flow.Flow;
 import leonardo2204.com.br.flowtests.ContactsAdapter;
-import leonardo2204.com.br.flowtests.R;
-import leonardo2204.com.br.flowtests.di.DaggerScope;
 import leonardo2204.com.br.flowtests.di.component.FirstScreenComponent;
+import leonardo2204.com.br.flowtests.di.scope.DaggerScope;
 import leonardo2204.com.br.flowtests.domain.interactor.DefaultSubscriber;
 import leonardo2204.com.br.flowtests.domain.interactor.GetContacts;
 import leonardo2204.com.br.flowtests.model.Contact;
 import leonardo2204.com.br.flowtests.screen.DetailsScreen;
 import leonardo2204.com.br.flowtests.view.FirstView;
 import mortar.ViewPresenter;
+import rx.functions.Action0;
 
 /**
  * Created by Leonardo on 05/03/2016.
@@ -28,9 +26,8 @@ import mortar.ViewPresenter;
 @DaggerScope(FirstScreenComponent.class)
 public class FirstScreenPresenter extends ViewPresenter<FirstView> {
 
-    private final ToolbarPresenter toolbarPresenter;
-    private final NavigationPresenter navigationPresenter;
     private final GetContacts getContacts;
+    private final ActionBarOwner actionBarOwner;
     private final FirstView.ContactListener contactListener = new FirstView.ContactListener() {
         @Override
         public void onClick(Contact contact) {
@@ -38,33 +35,37 @@ public class FirstScreenPresenter extends ViewPresenter<FirstView> {
         }
     };
 
+    private boolean mustHaveNumber = true;
+
     @Inject
-    public FirstScreenPresenter(GetContacts getContacts, ToolbarPresenter toolbarPresenter, NavigationPresenter navigationPresenter) {
+    public FirstScreenPresenter(GetContacts getContacts, ActionBarOwner actionBarOwner) {
         this.getContacts = getContacts;
-        this.toolbarPresenter = toolbarPresenter;
-        this.navigationPresenter = navigationPresenter;
+        this.actionBarOwner = actionBarOwner;
     }
 
     @Override
     protected void onLoad(Bundle savedInstanceState) {
-        super.onLoad(savedInstanceState);
-        this.toolbarPresenter.setTitle("Contacts list");
-        this.toolbarPresenter.setNavigationIcon(R.drawable.ic_menu_black_24dp);
-        this.toolbarPresenter.setNavigationClickListener(new View.OnClickListener() {
+        if (!hasView()) return;
+
+        ActionBarOwner.MenuAction menuAction = new ActionBarOwner.MenuAction("Show only texts", new Action0() {
             @Override
-            public void onClick(View v) {
-                if (getView() != null)
-                    getView().openDrawer(getView().navigationView);
+            public void call() {
+                fetchContacts(mustHaveNumber);
+                mustHaveNumber = !mustHaveNumber;
             }
-        });
-        SwitchCompat switchCompat = (SwitchCompat) this.navigationPresenter.setupMenuItem().findItem(R.id.switch_only_numbers).getActionView();
-        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                fetchContacts(isChecked);
-                getView().setMustHaveNumber(isChecked);
-            }
-        });
+        }, 0);
+
+        ActionBarOwner.Config config = new ActionBarOwner.Config(Arrays.asList(menuAction), "Contacts list", true, false);
+        this.actionBarOwner.setConfig(config);
+
+//        SwitchCompat switchCompat = (SwitchCompat) this.navigationPresenter.setupMenuItem().findItem(R.id.switch_only_numbers).getActionView();
+//        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                fetchContacts(isChecked);
+//                getView().setMustHaveNumber(isChecked);
+//            }
+//        });
     }
 
     @Override
@@ -79,6 +80,8 @@ public class FirstScreenPresenter extends ViewPresenter<FirstView> {
 
         if (getView().contacts_rv.getAdapter() != null)
             ((ContactsAdapter) getView().contacts_rv.getAdapter()).clearAdapter();
+
+        getView().setMustHaveNumber(mustHaveNumber);
 
         Bundle bundle = new Bundle(1);
 

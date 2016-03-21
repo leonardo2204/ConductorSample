@@ -1,9 +1,9 @@
 package leonardo2204.com.br.flowtests.flow.serviceFactory;
 
+import android.util.Log;
+
 import flow.Services;
 import flow.ServicesFactory;
-import flow.TreeKey;
-import leonardo2204.com.br.flowtests.di.DaggerService;
 import leonardo2204.com.br.flowtests.flow.keys.ContactsUIKey;
 import leonardo2204.com.br.flowtests.flow.keys.EditContactKey;
 import leonardo2204.com.br.flowtests.mortar.ScreenScoper;
@@ -25,6 +25,8 @@ public class DaggerServiceFactory extends ServicesFactory {
     @Override
     public void bindServices(Services.Binder services) {
         MortarScope scope = null;
+
+        Log.d("services", services.getKey().toString());
 
         if(services.getKey() instanceof ContactsUIKey) {
             scope = parentScope;

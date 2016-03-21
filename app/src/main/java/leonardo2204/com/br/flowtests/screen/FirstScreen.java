@@ -1,15 +1,11 @@
 package leonardo2204.com.br.flowtests.screen;
 
-import android.support.annotation.NonNull;
-
 import flow.ClassKey;
-import flow.TreeKey;
 import leonardo2204.com.br.flowtests.Layout;
 import leonardo2204.com.br.flowtests.R;
-import leonardo2204.com.br.flowtests.di.component.AppComponent;
+import leonardo2204.com.br.flowtests.di.component.ActivityComponent;
 import leonardo2204.com.br.flowtests.di.component.DaggerFirstScreenComponent;
 import leonardo2204.com.br.flowtests.di.module.FirstScreenModule;
-import leonardo2204.com.br.flowtests.flow.keys.ContactsUIKey;
 import leonardo2204.com.br.flowtests.flow.serviceFactory.InjectionComponent;
 
 /**
@@ -17,16 +13,16 @@ import leonardo2204.com.br.flowtests.flow.serviceFactory.InjectionComponent;
  */
 @Layout(R.layout.screen_first)
 @org.parceler.Parcel
-public class FirstScreen extends ClassKey implements InjectionComponent<AppComponent> {
+public class FirstScreen extends ClassKey implements InjectionComponent<ActivityComponent> {
 
     public FirstScreen() {
     }
 
     @Override
-    public Object createComponent(AppComponent parent) {
+    public Object createComponent(ActivityComponent parent) {
         return DaggerFirstScreenComponent
                 .builder()
-                .appComponent(parent)
+                .activityComponent(parent)
                 .firstScreenModule(new FirstScreenModule())
                 .build();
     }
