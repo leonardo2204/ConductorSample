@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FlowTests.iml" filepath="$PROJECT_DIR$/FlowTests.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Flow1.0.0-alphaExample.iml" filepath="$PROJECT_DIR$/Flow1.0.0-alphaExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/flow/flow.iml" filepath="$PROJECT_DIR$/flow/flow.iml" />
     </modules>
   </component>
 </project>

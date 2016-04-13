@@ -1,16 +1,19 @@
 package leonardo2204.com.br.flowtests.screen;
 
-import android.support.annotation.LayoutRes;
+import android.os.Bundle;
 
-import flow.ClassKey;
-import leonardo2204.com.br.flowtests.flow.serviceFactory.InjectionComponent;
+import leonardo2204.com.br.flowtests.conductor.ButterknifeController;
 
 /**
  * Created by Leonardo on 08/03/2016.
  */
-public abstract class BaseScreen extends ClassKey implements InjectionComponent {
+public abstract class BaseScreen extends ButterknifeController {
 
-    public abstract
-    @LayoutRes
-    int layoutResId();
+    protected BaseScreen() {
+    }
+
+    protected BaseScreen(Bundle args) {
+        super(args);
+    }
+
 }

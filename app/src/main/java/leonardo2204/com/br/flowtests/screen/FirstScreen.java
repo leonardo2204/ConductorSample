@@ -1,29 +1,36 @@
 package leonardo2204.com.br.flowtests.screen;
 
-import flow.ClassKey;
-import leonardo2204.com.br.flowtests.Layout;
+import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import leonardo2204.com.br.flowtests.R;
 import leonardo2204.com.br.flowtests.di.component.ActivityComponent;
 import leonardo2204.com.br.flowtests.di.component.DaggerFirstScreenComponent;
 import leonardo2204.com.br.flowtests.di.module.FirstScreenModule;
-import leonardo2204.com.br.flowtests.flow.serviceFactory.InjectionComponent;
 
 /**
  * Created by Leonardo on 04/03/2016.
  */
-@Layout(R.layout.screen_first)
-@org.parceler.Parcel
-public class FirstScreen extends ClassKey implements InjectionComponent<ActivityComponent> {
+public class FirstScreen extends BaseScreen {
 
-    public FirstScreen() {
+    @Override
+    protected Object createComponent(Object parent) {
+        return DaggerFirstScreenComponent
+                .builder()
+                .activityComponent((ActivityComponent) parent)
+                .firstScreenModule(new FirstScreenModule(getRouter()))
+                .build();
     }
 
     @Override
-    public Object createComponent(ActivityComponent parent) {
-        return DaggerFirstScreenComponent
-                .builder()
-                .activityComponent(parent)
-                .firstScreenModule(new FirstScreenModule())
-                .build();
+    protected String serviceName() {
+        return this.getClass().getName();
+    }
+
+    @Override
+    protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+        return inflater.inflate(R.layout.screen_first, container, false);
     }
 }

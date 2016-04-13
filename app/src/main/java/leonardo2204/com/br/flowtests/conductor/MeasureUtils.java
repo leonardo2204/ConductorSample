@@ -1,12 +1,11 @@
-package leonardo2204.com.br.flowtests.flow;
+package leonardo2204.com.br.flowtests.conductor;
 
 import android.view.View;
 import android.view.ViewTreeObserver;
 
-public final class FlowUtils {
+public final class MeasureUtils {
 
-    public interface OnMeasuredCallback {
-        void onMeasured(View view, int width, int height);
+    private MeasureUtils() {
     }
 
     public static void waitForMeasure(final View view, final OnMeasuredCallback callback) {
@@ -33,6 +32,7 @@ public final class FlowUtils {
         });
     }
 
-    private FlowUtils() {
+    public interface OnMeasuredCallback {
+        void onMeasured(View view, int width, int height);
     }
 }

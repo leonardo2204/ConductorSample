@@ -1,6 +1,7 @@
 package leonardo2204.com.br.flowtests;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,23 +10,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.bluelinelabs.conductor.Conductor;
+import com.bluelinelabs.conductor.Router;
+
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import flow.Flow;
-import flow.KeyDispatcher;
 import leonardo2204.com.br.flowtests.di.DaggerService;
 import leonardo2204.com.br.flowtests.di.component.ActivityComponent;
 import leonardo2204.com.br.flowtests.di.component.AppComponent;
 import leonardo2204.com.br.flowtests.di.component.DaggerActivityComponent;
 import leonardo2204.com.br.flowtests.di.module.ActivityModule;
 import leonardo2204.com.br.flowtests.di.scope.DaggerScope;
-import leonardo2204.com.br.flowtests.flow.dispatcher.Changer;
-import leonardo2204.com.br.flowtests.flow.parceler.BasicKeyParceler;
-import leonardo2204.com.br.flowtests.flow.serviceFactory.DaggerServiceFactory;
 import leonardo2204.com.br.flowtests.presenter.ActionBarOwner;
 import leonardo2204.com.br.flowtests.screen.FirstScreen;
 import mortar.MortarScope;
@@ -47,17 +46,7 @@ public class RootActivity extends AppCompatActivity implements ActionBarOwner.Ac
 
     private MortarScope mortarScope;
     private List<ActionBarOwner.MenuAction> actionBarMenuActionList;
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        newBase = Flow.configure(newBase,this)
-                .addServicesFactory(new DaggerServiceFactory(MortarScope.getScope(newBase)))
-                .dispatcher(KeyDispatcher.configure(this, new Changer(this)).build())
-                .defaultKey(new FirstScreen())
-                .keyParceler(new BasicKeyParceler())
-                .install();
-        super.attachBaseContext(newBase);
-    }
+    private Router router;
 
     @Override
     public Object getSystemService(String name) {
@@ -72,8 +61,16 @@ public class RootActivity extends AppCompatActivity implements ActionBarOwner.Ac
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupUI();
-        setupDagger();
+        setupConductor(savedInstanceState);
+        setupMortar();
         BundleServiceRunner.getBundleServiceRunner(this).onCreate(savedInstanceState);
+    }
+
+    private void setupConductor(Bundle savedInstanceState) {
+        router = Conductor.attachRouter(this, content, savedInstanceState);
+        if (!router.hasRootController()) {
+            router.setRoot(new FirstScreen());
+        }
     }
 
     private ActivityComponent setupDagger() {
@@ -126,6 +123,12 @@ public class RootActivity extends AppCompatActivity implements ActionBarOwner.Ac
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        router.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         BundleServiceRunner.getBundleServiceRunner(this).onSaveInstanceState(outState);
@@ -134,7 +137,7 @@ public class RootActivity extends AppCompatActivity implements ActionBarOwner.Ac
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            return Flow.get(this).goBack();
+            return router.handleBack();
         }
 
         return super.onOptionsItemSelected(item);
@@ -157,7 +160,7 @@ public class RootActivity extends AppCompatActivity implements ActionBarOwner.Ac
 
     @Override
     public void onBackPressed() {
-        if (!Flow.get(this).goBack())
+        if (!router.handleBack())
             super.onBackPressed();
     }
 

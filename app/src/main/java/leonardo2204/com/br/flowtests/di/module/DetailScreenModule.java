@@ -1,5 +1,7 @@
 package leonardo2204.com.br.flowtests.di.module;
 
+import com.bluelinelabs.conductor.Controller;
+
 import dagger.Module;
 import dagger.Provides;
 import leonardo2204.com.br.flowtests.di.component.DetailScreenComponent;
@@ -8,6 +10,7 @@ import leonardo2204.com.br.flowtests.domain.executor.PostExecutionThread;
 import leonardo2204.com.br.flowtests.domain.executor.ThreadExecutor;
 import leonardo2204.com.br.flowtests.domain.interactor.GetDetailedContact;
 import leonardo2204.com.br.flowtests.domain.repository.ContactsRepository;
+import leonardo2204.com.br.flowtests.model.Contact;
 import leonardo2204.com.br.flowtests.presenter.ActionBarOwner;
 import leonardo2204.com.br.flowtests.presenter.DetailsScreenPresenter;
 
@@ -16,6 +19,14 @@ import leonardo2204.com.br.flowtests.presenter.DetailsScreenPresenter;
  */
 @Module
 public class DetailScreenModule {
+
+    private final Contact contact;
+    private final Controller controller;
+
+    public DetailScreenModule(Contact contact, Controller controller) {
+        this.contact = contact;
+        this.controller = controller;
+    }
 
     @Provides
     @DaggerScope(DetailScreenComponent.class)
@@ -26,6 +37,19 @@ public class DetailScreenModule {
     @Provides
     @DaggerScope(DetailScreenComponent.class)
     public DetailsScreenPresenter providesDetailsScreenPresenter(GetDetailedContact getDetailedContact, ActionBarOwner actionBarOwner) {
-        return new DetailsScreenPresenter(getDetailedContact, actionBarOwner);
+        return new DetailsScreenPresenter(getDetailedContact, actionBarOwner, contact);
     }
+
+    @Provides
+    @DaggerScope(DetailScreenComponent.class)
+    public Contact providesContact() {
+        return this.contact;
+    }
+
+    @Provides
+    @DaggerScope(DetailScreenComponent.class)
+    public Controller providesRouter() {
+        return this.controller;
+    }
+
 }

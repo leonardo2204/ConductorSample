@@ -9,14 +9,12 @@ import java.util.Arrays;
 
 import javax.inject.Inject;
 
-import flow.Flow;
 import leonardo2204.com.br.flowtests.R;
 import leonardo2204.com.br.flowtests.di.component.DetailScreenComponent;
 import leonardo2204.com.br.flowtests.di.scope.DaggerScope;
 import leonardo2204.com.br.flowtests.domain.interactor.DefaultSubscriber;
 import leonardo2204.com.br.flowtests.domain.interactor.GetDetailedContact;
 import leonardo2204.com.br.flowtests.model.Contact;
-import leonardo2204.com.br.flowtests.screen.DetailsScreen;
 import leonardo2204.com.br.flowtests.view.DetailsView;
 import mortar.ViewPresenter;
 import rx.functions.Action0;
@@ -32,15 +30,15 @@ public class DetailsScreenPresenter extends ViewPresenter<DetailsView> {
     private Contact contact;
 
     @Inject
-    public DetailsScreenPresenter(GetDetailedContact getDetailedContact, ActionBarOwner actionBarOwner) {
+    public DetailsScreenPresenter(GetDetailedContact getDetailedContact, ActionBarOwner actionBarOwner, Contact contact) {
         this.getDetailedContact = getDetailedContact;
         this.actionBarOwner = actionBarOwner;
+        this.contact = contact;
     }
 
     @Override
     protected void onLoad(Bundle savedInstanceState) {
         super.onLoad(savedInstanceState);
-        this.contact = ((DetailsScreen) Flow.getKey(getView())).getContact();
         Bundle bundle = new Bundle(1);
         bundle.putParcelable("contact", Parcels.wrap(contact));
         this.getDetailedContact.execute(new DetailedSubscriber(), bundle);

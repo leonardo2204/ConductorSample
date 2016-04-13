@@ -3,12 +3,15 @@ package leonardo2204.com.br.flowtests.presenter;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.bluelinelabs.conductor.Router;
+import com.bluelinelabs.conductor.RouterTransaction;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
+
 import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import flow.Flow;
 import leonardo2204.com.br.flowtests.ContactsAdapter;
 import leonardo2204.com.br.flowtests.di.component.FirstScreenComponent;
 import leonardo2204.com.br.flowtests.di.scope.DaggerScope;
@@ -28,19 +31,24 @@ public class FirstScreenPresenter extends ViewPresenter<FirstView> {
 
     private final GetContacts getContacts;
     private final ActionBarOwner actionBarOwner;
+    private final Router router;
     private final FirstView.ContactListener contactListener = new FirstView.ContactListener() {
         @Override
         public void onClick(Contact contact) {
-            Flow.get(getView()).set(new DetailsScreen(contact));
+            router.pushController(RouterTransaction.builder(new DetailsScreen(contact))
+                    .pushChangeHandler(new FadeChangeHandler())
+                    .popChangeHandler(new FadeChangeHandler())
+                    .build());
         }
     };
 
     private boolean mustHaveNumber = true;
 
     @Inject
-    public FirstScreenPresenter(GetContacts getContacts, ActionBarOwner actionBarOwner) {
+    public FirstScreenPresenter(GetContacts getContacts, ActionBarOwner actionBarOwner, Router router) {
         this.getContacts = getContacts;
         this.actionBarOwner = actionBarOwner;
+        this.router = router;
     }
 
     @Override

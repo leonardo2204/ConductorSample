@@ -2,8 +2,12 @@ package leonardo2204.com.br.flowtests.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import com.bluelinelabs.conductor.ChildControllerTransaction;
+import com.bluelinelabs.conductor.Controller;
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
 
 import java.util.List;
 
@@ -11,24 +15,28 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import flow.Flow;
 import leonardo2204.com.br.flowtests.R;
 import leonardo2204.com.br.flowtests.custom.view.EndDrawableTextView;
 import leonardo2204.com.br.flowtests.custom.view.MultiEditableTextView;
 import leonardo2204.com.br.flowtests.di.DaggerService;
 import leonardo2204.com.br.flowtests.di.component.DetailScreenComponent;
+import leonardo2204.com.br.flowtests.model.Contact;
 import leonardo2204.com.br.flowtests.presenter.DetailsScreenPresenter;
-import leonardo2204.com.br.flowtests.screen.DetailsScreen;
 import leonardo2204.com.br.flowtests.screen.EditDialogScreen;
 import mortar.MortarScope;
 
 /**
  * Created by Leonardo on 05/03/2016.
  */
-public class DetailsView extends LinearLayout {
+public class DetailsView extends FrameLayout {
 
     @Inject
     protected DetailsScreenPresenter presenter;
+    @Inject
+    protected Contact contact;
+    @Inject
+    protected Controller router;
+
     @Bind(R.id.name)
     EndDrawableTextView name;
     @Bind(R.id.telephone_header)
@@ -70,12 +78,16 @@ public class DetailsView extends LinearLayout {
 
         //ViewCompat.setBackgroundTintList(telephoneHeader, ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorAccent)));
 
-        final DetailsScreen screen = Flow.getKey(this);
-        name.setText(screen.getContact().getName());
+        //final DetailsScreen screen = Flow.getKey(this);
+        name.setText(contact.getName());
         name.setOnDrawableClickListener(new EndDrawableTextView.OnDrawableClickListener() {
             @Override
             public void onEndDrawableClick() {
-                Flow.get(DetailsView.this).set(new EditDialogScreen(screen.getContact()));
+                router.addChildController(ChildControllerTransaction.builder(new EditDialogScreen(contact), R.id.details_view)
+                        .pushChangeHandler(new FadeChangeHandler(false))
+                        .popChangeHandler(new FadeChangeHandler(false))
+                        .addToLocalBackstack(true)
+                        .build());
             }
         });
 
@@ -92,12 +104,11 @@ public class DetailsView extends LinearLayout {
     }
 
     private void initUI(Context context) {
-        setOrientation(VERTICAL);
         initializeInjection(context);
     }
 
     private void initializeInjection(Context context) {
-        MortarScope scope = Flow.getService(Flow.getKey(this).getClass().getName(), context);
+        MortarScope scope = MortarScope.getScope(context);
         ((DetailScreenComponent)scope.getService(DaggerService.SERVICE_NAME)).inject(this);
     }
 

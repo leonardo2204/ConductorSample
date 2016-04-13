@@ -12,7 +12,6 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import flow.Flow;
 import leonardo2204.com.br.flowtests.R;
 import leonardo2204.com.br.flowtests.di.DaggerService;
 import leonardo2204.com.br.flowtests.di.component.FirstScreenComponent;
@@ -50,7 +49,7 @@ public class FirstView extends FrameLayout {
     }
 
     private void inject(Context context) {
-        MortarScope scope = Flow.getService(Flow.getKey(this).getClass().getName(), context);
+        MortarScope scope = MortarScope.getScope(context);
         ((FirstScreenComponent)scope.getService(DaggerService.SERVICE_NAME)).inject(this);
         //DaggerService.<FirstScreenComponent>getDaggerComponent(context).inject(this);
     }

@@ -2,23 +2,23 @@ package leonardo2204.com.br.flowtests.screen;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import flow.TreeKey;
-import leonardo2204.com.br.flowtests.Layout;
 import leonardo2204.com.br.flowtests.R;
 import leonardo2204.com.br.flowtests.di.component.DaggerEditDialogComponent;
 import leonardo2204.com.br.flowtests.di.component.DetailScreenComponent;
+import leonardo2204.com.br.flowtests.di.component.EditDialogComponent;
 import leonardo2204.com.br.flowtests.di.module.EditDialogModule;
-import leonardo2204.com.br.flowtests.flow.keys.EditContactKey;
-import leonardo2204.com.br.flowtests.flow.serviceFactory.InjectionComponent;
+import leonardo2204.com.br.flowtests.di.scope.DaggerScope;
 import leonardo2204.com.br.flowtests.model.Contact;
 
 /**
  * Created by Leonardo on 08/03/2016.
  */
-//@Dialog
-@Layout(R.layout.edit_dialog_screen)
-public class EditDialogScreen implements InjectionComponent<DetailScreenComponent>, TreeKey {
+@DaggerScope(EditDialogComponent.class)
+public class EditDialogScreen extends BaseScreen {
 
     final Contact contact;
 
@@ -26,19 +26,26 @@ public class EditDialogScreen implements InjectionComponent<DetailScreenComponen
         this.contact = contact;
     }
 
+    public EditDialogScreen() {
+        this.contact = null;
+    }
+
     @Override
-    public Object createComponent(DetailScreenComponent parent) {
+    public Object createComponent(Object parent) {
         Log.d("injection", "injecting details");
         return DaggerEditDialogComponent.builder()
-                .detailScreenComponent(parent)
-                .editDialogModule(new EditDialogModule())
+                .detailScreenComponent((DetailScreenComponent) parent)
+                .editDialogModule(new EditDialogModule(contact, getRouter(), this))
                 .build();
     }
 
-
-    @NonNull
     @Override
-    public Object getParentKey() {
-        return new EditContactKey(contact);
+    protected String serviceName() {
+        return getClass().getName();
+    }
+
+    @Override
+    protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+        return inflater.inflate(R.layout.edit_dialog_screen, container, false);
     }
 }
