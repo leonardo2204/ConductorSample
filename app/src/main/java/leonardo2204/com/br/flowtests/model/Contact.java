@@ -1,5 +1,7 @@
 package leonardo2204.com.br.flowtests.model;
 
+import android.graphics.Bitmap;
+
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
@@ -15,6 +17,7 @@ public class Contact {
     String id;
     String name;
     List<String> telephone;
+    Bitmap picture;
 
     public Contact() {
     }
@@ -24,6 +27,14 @@ public class Contact {
         this.id = id;
         this.name = name;
         this.telephone = telephone;
+    }
+
+    public Bitmap getPicture() {
+        return picture;
+    }
+
+    public void setPicture(Bitmap picture) {
+        this.picture = picture;
     }
 
     public String getId() {

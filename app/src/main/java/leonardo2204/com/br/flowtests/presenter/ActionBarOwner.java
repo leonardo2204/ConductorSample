@@ -1,42 +1,26 @@
 package leonardo2204.com.br.flowtests.presenter;
 
 import android.content.Context;
-import android.os.Bundle;
 
 import java.util.List;
 
 import leonardo2204.com.br.flowtests.di.component.ActivityComponent;
 import leonardo2204.com.br.flowtests.di.scope.DaggerScope;
-import mortar.Presenter;
-import mortar.bundler.BundleService;
 import rx.functions.Action0;
 
 /**
  * Created by Leonardo on 20/03/2016.
  */
 @DaggerScope(ActivityComponent.class)
-public class ActionBarOwner extends Presenter<ActionBarOwner.Activity> {
+public class ActionBarOwner {
 
     private Config config;
 
-    @Override
-    protected BundleService extractBundleService(Activity view) {
-        return BundleService.getBundleService(view.getContext());
-    }
-
-    @Override
-    protected void onLoad(Bundle savedInstanceState) {
-        if (config != null) update();
-    }
-
     private void update() {
-        if (!hasView()) return;
-
-        Activity activity = getView();
-        activity.setMenu(config.menuActionList);
-        activity.setShowHomeEnabled(config.showHomeEnabled);
-        activity.setUpButtonEnabled(config.upButtonEnabled);
-        activity.setToolbarTitle(config.title);
+//        activity.setMenu(config.menuActionList);
+//        activity.setShowHomeEnabled(config.showHomeEnabled);
+//        activity.setUpButtonEnabled(config.upButtonEnabled);
+//        activity.setToolbarTitle(config.title);
     }
 
     public Config getConfig() {

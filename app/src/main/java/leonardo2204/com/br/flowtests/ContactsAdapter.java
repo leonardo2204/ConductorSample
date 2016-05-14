@@ -1,18 +1,17 @@
 package leonardo2204.com.br.flowtests;
 
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import leonardo2204.com.br.flowtests.model.Contact;
-import leonardo2204.com.br.flowtests.view.FirstView;
 
 /**
  * Created by Leonardo on 05/03/2016.
@@ -21,21 +20,29 @@ public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private final static int HEADER_VIEW = 1;
     private final static int CONTACT_VIEW = 2;
-    private final List<Contact> contacts;
     int headerCount = 0;
     Character previousChar;
-    private FirstView.ContactListener contactListener;
+    private List<Contact> contacts;
+    private OnClickListener onClickListener;
 
-    public ContactsAdapter(@NonNull List<Contact> contacts) {
-        this.contacts = contacts;
+    public ContactsAdapter() {
     }
 
-    public void setContactListener(FirstView.ContactListener contactListener) {
-        this.contactListener = contactListener;
+    public void setOnClickListener(OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
     }
 
     public void clearAdapter() {
         this.contacts.clear();
+        notifyDataSetChanged();
+    }
+
+    public List<Contact> getContacts() {
+        return Collections.unmodifiableList(contacts);
+    }
+
+    public void setContacts(List<Contact> contacts) {
+        this.contacts = contacts;
         notifyDataSetChanged();
     }
 
@@ -58,8 +65,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (ContactsAdapter.this.contactListener != null) {
-                        ContactsAdapter.this.contactListener.onClick(contact);
+                    if (ContactsAdapter.this.onClickListener != null) {
+                        ContactsAdapter.this.onClickListener.onClick(contact);
                     }
                 }
             });
@@ -89,7 +96,11 @@ public class ContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return contacts.size();
+        return contacts != null ? contacts.size() : 0;
+    }
+
+    public interface OnClickListener {
+        void onClick(Contact contact);
     }
 
     static class ContactsViewHolder extends RecyclerView.ViewHolder {

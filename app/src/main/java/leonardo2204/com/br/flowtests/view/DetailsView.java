@@ -1,115 +1,11 @@
 package leonardo2204.com.br.flowtests.view;
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.widget.FrameLayout;
-import android.widget.TextView;
+import com.hannesdorfmann.mosby.mvp.lce.MvpLceView;
 
-import com.bluelinelabs.conductor.ChildControllerTransaction;
-import com.bluelinelabs.conductor.Controller;
-import com.bluelinelabs.conductor.changehandler.FadeChangeHandler;
-
-import java.util.List;
-
-import javax.inject.Inject;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import leonardo2204.com.br.flowtests.R;
-import leonardo2204.com.br.flowtests.custom.view.EndDrawableTextView;
-import leonardo2204.com.br.flowtests.custom.view.MultiEditableTextView;
-import leonardo2204.com.br.flowtests.di.DaggerService;
-import leonardo2204.com.br.flowtests.di.component.DetailScreenComponent;
 import leonardo2204.com.br.flowtests.model.Contact;
-import leonardo2204.com.br.flowtests.presenter.DetailsScreenPresenter;
-import leonardo2204.com.br.flowtests.screen.EditDialogScreen;
-import mortar.MortarScope;
 
 /**
  * Created by Leonardo on 05/03/2016.
  */
-public class DetailsView extends FrameLayout {
-
-    @Inject
-    protected DetailsScreenPresenter presenter;
-    @Inject
-    protected Contact contact;
-    @Inject
-    protected Controller router;
-
-    @Bind(R.id.name)
-    EndDrawableTextView name;
-    @Bind(R.id.telephone_header)
-    TextView telephoneHeader;
-    @Bind(R.id.multi_telephone)
-    MultiEditableTextView telephone;
-
-    public DetailsView(Context context) {
-        super(context);
-        initUI(context);
-    }
-
-    public DetailsView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initUI(context);
-    }
-
-    public DetailsView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initUI(context);
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        presenter.takeView(this);
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        presenter.dropView(this);
-        super.onDetachedFromWindow();
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        ButterKnife.bind(this);
-
-        //ViewCompat.setBackgroundTintList(telephoneHeader, ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorAccent)));
-
-        //final DetailsScreen screen = Flow.getKey(this);
-        name.setText(contact.getName());
-        name.setOnDrawableClickListener(new EndDrawableTextView.OnDrawableClickListener() {
-            @Override
-            public void onEndDrawableClick() {
-                router.addChildController(ChildControllerTransaction.builder(new EditDialogScreen(contact), R.id.details_view)
-                        .pushChangeHandler(new FadeChangeHandler(false))
-                        .popChangeHandler(new FadeChangeHandler(false))
-                        .addToLocalBackstack(true)
-                        .build());
-            }
-        });
-
-//        telephone.setOnDrawableClickListener(new EndDrawableTextView.OnDrawableClickListener() {
-//            @Override
-//            public void onEndDrawableClick() {
-//                Toast.makeText(getContext(), "Open Edit Phone Dialog...", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-    }
-
-    public void setTelephoneField(List<String> telephoneNumberList) {
-        telephone.addItems(telephoneNumberList);
-    }
-
-    private void initUI(Context context) {
-        initializeInjection(context);
-    }
-
-    private void initializeInjection(Context context) {
-        MortarScope scope = MortarScope.getScope(context);
-        ((DetailScreenComponent)scope.getService(DaggerService.SERVICE_NAME)).inject(this);
-    }
-
+public interface DetailsView extends MvpLceView<Contact> {
 }

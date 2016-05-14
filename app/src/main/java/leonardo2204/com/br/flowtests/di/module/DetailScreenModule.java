@@ -1,7 +1,5 @@
 package leonardo2204.com.br.flowtests.di.module;
 
-import com.bluelinelabs.conductor.Controller;
-
 import dagger.Module;
 import dagger.Provides;
 import leonardo2204.com.br.flowtests.di.component.DetailScreenComponent;
@@ -21,11 +19,9 @@ import leonardo2204.com.br.flowtests.presenter.DetailsScreenPresenter;
 public class DetailScreenModule {
 
     private final Contact contact;
-    private final Controller controller;
 
-    public DetailScreenModule(Contact contact, Controller controller) {
+    public DetailScreenModule(Contact contact) {
         this.contact = contact;
-        this.controller = controller;
     }
 
     @Provides
@@ -44,12 +40,6 @@ public class DetailScreenModule {
     @DaggerScope(DetailScreenComponent.class)
     public Contact providesContact() {
         return this.contact;
-    }
-
-    @Provides
-    @DaggerScope(DetailScreenComponent.class)
-    public Controller providesRouter() {
-        return this.controller;
     }
 
 }

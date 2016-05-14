@@ -1,7 +1,5 @@
 package leonardo2204.com.br.flowtests.di.module;
 
-import com.bluelinelabs.conductor.Router;
-
 import dagger.Module;
 import dagger.Provides;
 import leonardo2204.com.br.flowtests.di.component.FirstScreenComponent;
@@ -19,12 +17,6 @@ import leonardo2204.com.br.flowtests.presenter.FirstScreenPresenter;
 @Module
 public class FirstScreenModule {
 
-    private final Router router;
-
-    public FirstScreenModule(Router router) {
-        this.router = router;
-    }
-
     @Provides
     @DaggerScope(FirstScreenComponent.class)
     public GetContacts providesGetContacts(ContactsRepository contactsRepository, ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
@@ -34,12 +26,6 @@ public class FirstScreenModule {
     @Provides
     @DaggerScope(FirstScreenComponent.class)
     public FirstScreenPresenter providesFirstScreenPresenter(GetContacts getContacts, ActionBarOwner actionBarOwner) {
-        return new FirstScreenPresenter(getContacts, actionBarOwner, router);
-    }
-
-    @Provides
-    @DaggerScope(FirstScreenComponent.class)
-    public Router providesRouter() {
-        return router;
+        return new FirstScreenPresenter(getContacts, actionBarOwner);
     }
 }

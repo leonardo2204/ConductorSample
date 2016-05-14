@@ -1,9 +1,14 @@
 package leonardo2204.com.br.flowtests.data.repository;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.provider.ContactsContract;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +16,7 @@ import leonardo2204.com.br.flowtests.domain.repository.ContactsRepository;
 import leonardo2204.com.br.flowtests.model.Contact;
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func1;
 
 /**
  * Created by Leonardo on 05/03/2016.
@@ -91,6 +97,7 @@ public class ContactsRepositoryImpl implements ContactsRepository {
                         }
                         pCur.close();
                     }
+
                     subscriber.onNext(contact);
                     subscriber.onCompleted();
                 }else{
@@ -99,6 +106,34 @@ public class ContactsRepositoryImpl implements ContactsRepository {
                 }
 
                 queryContacts.close();
+            }
+        }).flatMap(new Func1<Contact, Observable<Contact>>() {
+            @Override
+            public Observable<Contact> call(Contact contact) {
+                return getContactPhoto(contact);
+            }
+        });
+    }
+
+    private Observable<Contact> getContactPhoto(final Contact contact) {
+        return Observable.create(new Observable.OnSubscribe<Contact>() {
+            @Override
+            public void call(Subscriber<? super Contact> subscriber) {
+                Bitmap photo;
+                try {
+                    InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(contentResolver,
+                            ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.valueOf(contact.getId())));
+                    if (inputStream != null) {
+                        photo = BitmapFactory.decodeStream(inputStream);
+                        contact.setPicture(photo);
+                        inputStream.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                subscriber.onNext(contact);
+                subscriber.onCompleted();
             }
         });
     }

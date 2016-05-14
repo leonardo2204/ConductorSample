@@ -12,11 +12,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import leonardo2204.com.br.flowtests.R;
-import leonardo2204.com.br.flowtests.di.DaggerService;
-import leonardo2204.com.br.flowtests.di.component.EditDialogComponent;
 import leonardo2204.com.br.flowtests.model.Contact;
 import leonardo2204.com.br.flowtests.presenter.EditDialogPresenter;
-import mortar.MortarScope;
 
 /**
  * Created by leonardo on 4/13/16.
@@ -33,26 +30,14 @@ public class EditDialogView extends FrameLayout {
 
     public EditDialogView(Context context) {
         super(context);
-        initUI(context);
     }
 
     public EditDialogView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initUI(context);
     }
 
     public EditDialogView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initUI(context);
-    }
-
-    private void initUI(Context context) {
-        initializeInjection(context);
-    }
-
-    private void initializeInjection(Context context) {
-        MortarScope scope = MortarScope.getScope(context);
-        ((EditDialogComponent) scope.getService(DaggerService.SERVICE_NAME)).inject(this);
     }
 
     @Override

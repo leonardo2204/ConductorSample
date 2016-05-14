@@ -1,6 +1,5 @@
 package leonardo2204.com.br.flowtests.conductor;
 
-import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
@@ -22,13 +21,9 @@ public abstract class RxController extends Controller implements ControllerLifec
     private final BehaviorSubject<ControllerEvent> lifecycleSubject;
 
     public RxController() {
-        this(null);
-    }
-
-    public RxController(Bundle args) {
-        super(args);
         lifecycleSubject = ControllerLifecycleSubjectHelper.create(this);
     }
+
 
     @Override
     @NonNull

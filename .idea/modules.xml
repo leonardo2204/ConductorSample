@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/ConductorSample.iml" filepath="$PROJECT_DIR$/ConductorSample.iml" />
       <module fileurl="file://$PROJECT_DIR$/Flow1.0.0-alphaExample.iml" filepath="$PROJECT_DIR$/Flow1.0.0-alphaExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

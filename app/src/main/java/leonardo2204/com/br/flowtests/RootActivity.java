@@ -19,16 +19,12 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import leonardo2204.com.br.flowtests.di.DaggerService;
 import leonardo2204.com.br.flowtests.di.component.ActivityComponent;
-import leonardo2204.com.br.flowtests.di.component.AppComponent;
 import leonardo2204.com.br.flowtests.di.component.DaggerActivityComponent;
 import leonardo2204.com.br.flowtests.di.module.ActivityModule;
 import leonardo2204.com.br.flowtests.di.scope.DaggerScope;
 import leonardo2204.com.br.flowtests.presenter.ActionBarOwner;
 import leonardo2204.com.br.flowtests.screen.FirstScreen;
-import mortar.MortarScope;
-import mortar.bundler.BundleServiceRunner;
 
 /**
  * Created by Leonardo on 04/03/2016.
@@ -44,26 +40,17 @@ public class RootActivity extends AppCompatActivity implements ActionBarOwner.Ac
     @Inject
     ActionBarOwner actionBarOwner;
 
-    private MortarScope mortarScope;
+    private ActivityComponent activityComponent;
+
     private List<ActionBarOwner.MenuAction> actionBarMenuActionList;
     private Router router;
-
-    @Override
-    public Object getSystemService(String name) {
-        if(mortarScope == null){
-            setupMortar();
-        }
-
-        return (mortarScope.hasService(name)) ? mortarScope.getService(name) : super.getSystemService(name);
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupUI();
+        setupDagger();
         setupConductor(savedInstanceState);
-        setupMortar();
-        BundleServiceRunner.getBundleServiceRunner(this).onCreate(savedInstanceState);
     }
 
     private void setupConductor(Bundle savedInstanceState) {
@@ -73,12 +60,16 @@ public class RootActivity extends AppCompatActivity implements ActionBarOwner.Ac
         }
     }
 
-    private ActivityComponent setupDagger() {
-        return DaggerActivityComponent
+    private void setupDagger() {
+        activityComponent = DaggerActivityComponent
                 .builder()
-                .appComponent(DaggerService.<AppComponent>getDaggerComponent(getApplicationContext()))
-                .activityModule(new ActivityModule())
+                .activityModule(new ActivityModule(this))
                 .build();
+
+    }
+
+    public ActivityComponent getActivityComponent() {
+        return activityComponent;
     }
 
     @Override
@@ -103,7 +94,6 @@ public class RootActivity extends AppCompatActivity implements ActionBarOwner.Ac
     }
 
     private void setupUI() {
-        actionBarOwner.takeView(this);
         setContentView(R.layout.activity_root);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
@@ -111,14 +101,7 @@ public class RootActivity extends AppCompatActivity implements ActionBarOwner.Ac
 
     @Override
     protected void onDestroy() {
-        actionBarOwner.dropView(this);
-        actionBarOwner.setConfig(null);
-
-        if (isFinishing() && mortarScope != null) {
-            mortarScope.destroy();
-            mortarScope = null;
-        }
-
+        //actionBarOwner.setConfig(null);
         super.onDestroy();
     }
 
@@ -129,33 +112,12 @@ public class RootActivity extends AppCompatActivity implements ActionBarOwner.Ac
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        BundleServiceRunner.getBundleServiceRunner(this).onSaveInstanceState(outState);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             return router.handleBack();
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void setupMortar() {
-        mortarScope = MortarScope.findChild(getApplicationContext(), getClass().getName());
-        ActivityComponent component = setupDagger();
-
-        if(mortarScope == null) {
-            mortarScope = MortarScope
-                    .buildChild(getApplicationContext())
-                    .withService(BundleServiceRunner.SERVICE_NAME, new BundleServiceRunner())
-                    .withService(DaggerService.SERVICE_NAME, component)
-                    .build(getClass().getName());
-        }
-
-        component.inject(this);
     }
 
     @Override
