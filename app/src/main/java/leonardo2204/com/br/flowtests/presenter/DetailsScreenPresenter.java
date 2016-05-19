@@ -20,13 +20,11 @@ import leonardo2204.com.br.flowtests.view.DetailsView;
 public class DetailsScreenPresenter extends MvpLceRxPresenter<DetailsView, Contact> {
 
     private final GetDetailedContact getDetailedContact;
-    private final ActionBarOwner actionBarOwner;
     private Contact contact;
 
     @Inject
-    public DetailsScreenPresenter(GetDetailedContact getDetailedContact, ActionBarOwner actionBarOwner, Contact contact) {
+    public DetailsScreenPresenter(GetDetailedContact getDetailedContact, Contact contact) {
         this.getDetailedContact = getDetailedContact;
-        this.actionBarOwner = actionBarOwner;
         this.contact = contact;
     }
 

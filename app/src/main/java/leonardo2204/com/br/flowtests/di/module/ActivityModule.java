@@ -2,8 +2,6 @@ package leonardo2204.com.br.flowtests.di.module;
 
 import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.Context;
-import android.content.SharedPreferences;
 
 import dagger.Module;
 import dagger.Provides;
@@ -15,7 +13,6 @@ import leonardo2204.com.br.flowtests.di.scope.DaggerScope;
 import leonardo2204.com.br.flowtests.domain.executor.PostExecutionThread;
 import leonardo2204.com.br.flowtests.domain.executor.ThreadExecutor;
 import leonardo2204.com.br.flowtests.domain.repository.ContactsRepository;
-import leonardo2204.com.br.flowtests.presenter.ActionBarOwner;
 
 /**
  * Created by Leonardo on 20/03/2016.
@@ -28,12 +25,6 @@ public class ActivityModule {
 
     public ActivityModule(Activity activity) {
         this.activity = activity;
-    }
-
-    @Provides
-    @DaggerScope(ActivityComponent.class)
-    public ActionBarOwner providesActionBarOwner() {
-        return new ActionBarOwner();
     }
 
     @Provides
@@ -70,11 +61,5 @@ public class ActivityModule {
     @DaggerScope(ActivityComponent.class)
     public ContactsRepository providesContactsRepository(ContentResolver contentResolver) {
         return new ContactsRepositoryImpl(contentResolver);
-    }
-
-    @Provides
-    @DaggerScope(ActivityComponent.class)
-    public SharedPreferences providesSharedPreferences() {
-        return this.activity.getSharedPreferences(SHARED_NAME, Context.MODE_PRIVATE);
     }
 }

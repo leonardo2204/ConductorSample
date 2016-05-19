@@ -9,7 +9,6 @@ import leonardo2204.com.br.flowtests.domain.executor.ThreadExecutor;
 import leonardo2204.com.br.flowtests.domain.interactor.GetDetailedContact;
 import leonardo2204.com.br.flowtests.domain.repository.ContactsRepository;
 import leonardo2204.com.br.flowtests.model.Contact;
-import leonardo2204.com.br.flowtests.presenter.ActionBarOwner;
 import leonardo2204.com.br.flowtests.presenter.DetailsScreenPresenter;
 
 /**
@@ -32,8 +31,8 @@ public class DetailScreenModule {
 
     @Provides
     @DaggerScope(DetailScreenComponent.class)
-    public DetailsScreenPresenter providesDetailsScreenPresenter(GetDetailedContact getDetailedContact, ActionBarOwner actionBarOwner) {
-        return new DetailsScreenPresenter(getDetailedContact, actionBarOwner, contact);
+    public DetailsScreenPresenter providesDetailsScreenPresenter(GetDetailedContact getDetailedContact) {
+        return new DetailsScreenPresenter(getDetailedContact, contact);
     }
 
     @Provides

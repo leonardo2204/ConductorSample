@@ -8,7 +8,6 @@ import leonardo2204.com.br.flowtests.domain.executor.PostExecutionThread;
 import leonardo2204.com.br.flowtests.domain.executor.ThreadExecutor;
 import leonardo2204.com.br.flowtests.domain.interactor.GetContacts;
 import leonardo2204.com.br.flowtests.domain.repository.ContactsRepository;
-import leonardo2204.com.br.flowtests.presenter.ActionBarOwner;
 import leonardo2204.com.br.flowtests.presenter.FirstScreenPresenter;
 
 /**
@@ -25,7 +24,7 @@ public class FirstScreenModule {
 
     @Provides
     @DaggerScope(FirstScreenComponent.class)
-    public FirstScreenPresenter providesFirstScreenPresenter(GetContacts getContacts, ActionBarOwner actionBarOwner) {
-        return new FirstScreenPresenter(getContacts, actionBarOwner);
+    public FirstScreenPresenter providesFirstScreenPresenter(GetContacts getContacts) {
+        return new FirstScreenPresenter(getContacts);
     }
 }
