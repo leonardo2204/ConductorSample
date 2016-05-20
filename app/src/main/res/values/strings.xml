@@ -2,4 +2,7 @@
     <string name="app_name">FlowTests</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="all_contacts">Todos contatos</string>
+    <string name="number_only">Somente com número</string>
+    <string name="my_contacts">Meus Contatos</string>
 </resources>

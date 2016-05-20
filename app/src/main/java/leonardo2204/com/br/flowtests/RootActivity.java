@@ -65,6 +65,8 @@ public class RootActivity extends AppCompatActivity {
         setContentView(R.layout.activity_root);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(R.string.my_contacts);
     }
 
     @Override

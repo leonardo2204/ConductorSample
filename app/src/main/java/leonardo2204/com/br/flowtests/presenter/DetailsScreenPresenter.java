@@ -34,9 +34,4 @@ public class DetailsScreenPresenter extends MvpLceRxPresenter<DetailsView, Conta
 
         subscribe(getDetailedContact, bundle, false);
     }
-
-    @Override
-    public void detachView(boolean retainInstance) {
-        super.detachView(retainInstance);
-    }
 }
