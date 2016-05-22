@@ -16,6 +16,8 @@ import butterknife.ButterKnife;
  */
 public abstract class BaseController<CV extends View, M, V extends MvpLceView<M>, P extends MvpPresenter<V>> extends MvpLceViewStateController<CV, M, V, P> {
 
+    private boolean created;
+
     protected BaseController() {
     }
 
@@ -24,12 +26,22 @@ public abstract class BaseController<CV extends View, M, V extends MvpLceView<M>
     @NonNull
     @Override
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
+
+        if (!created) {
+            onCreate();
+            created = true;
+        }
+
         View v;
         v = inflateView(inflater, container);
         ButterKnife.bind(this, v);
         onViewBound(v);
 
         return v;
+    }
+
+    protected void onCreate() {
+
     }
 
 

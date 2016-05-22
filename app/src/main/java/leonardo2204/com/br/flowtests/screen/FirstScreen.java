@@ -44,6 +44,11 @@ public class FirstScreen extends BaseController<RecyclerView, List<Contact>, Fir
     private boolean mustHaveNumber;
 
     @Override
+    protected void onCreate() {
+        setupInjection();
+    }
+
+    @Override
     protected View inflateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         return inflater.inflate(R.layout.screen_first, container, false);
     }
@@ -52,7 +57,6 @@ public class FirstScreen extends BaseController<RecyclerView, List<Contact>, Fir
     protected void onViewBound(@NonNull View view) {
         setHasOptionsMenu(true);
         super.onViewBound(view);
-        setupInjection();
 
         adapter = new ContactsAdapter();
         adapter.setOnClickListener(new ContactsAdapter.OnClickListener() {
