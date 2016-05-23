@@ -1,20 +1,19 @@
 package leonardo2204.com.br.flowtests.conductor;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hannesdorfmann.mosby.conductor.viewstate.lce.MvpLceViewStateController;
-import com.hannesdorfmann.mosby.mvp.MvpPresenter;
-import com.hannesdorfmann.mosby.mvp.lce.MvpLceView;
+import com.bluelinelabs.conductor.Controller;
 
 import butterknife.ButterKnife;
 
 /**
  * Created by leonardo on 4/12/16.
  */
-public abstract class BaseController<CV extends View, M, V extends MvpLceView<M>, P extends MvpPresenter<V>> extends MvpLceViewStateController<CV, M, V, P> {
+public abstract class BaseController extends Controller {
 
     private boolean created;
 
@@ -25,6 +24,7 @@ public abstract class BaseController<CV extends View, M, V extends MvpLceView<M>
 
     @NonNull
     @Override
+    @CallSuper
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
 
         if (!created) {

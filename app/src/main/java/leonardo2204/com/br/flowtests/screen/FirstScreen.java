@@ -1,7 +1,9 @@
 package leonardo2204.com.br.flowtests.screen;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,10 +12,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.bluelinelabs.conductor.RouterTransaction;
-import com.hannesdorfmann.mosby.mvp.viewstate.lce.LceViewState;
-import com.hannesdorfmann.mosby.mvp.viewstate.lce.data.RetainingLceViewState;
 
 import java.util.List;
 
@@ -33,13 +34,15 @@ import leonardo2204.com.br.flowtests.view.FirstView;
 /**
  * Created by Leonardo on 04/03/2016.
  */
-public class FirstScreen extends BaseController<RecyclerView, List<Contact>, FirstView, FirstScreenPresenter> implements FirstView {
+public class FirstScreen extends BaseController implements FirstView<List<Contact>> {
 
     private static final String MUST_HAVE_NUMBER = "must_have_number";
     @Inject
     protected FirstScreenPresenter presenter;
     @Bind(R.id.contacts_rv)
     RecyclerView contactsRv;
+    @Bind(R.id.loadingView)
+    ProgressBar progress;
     private ContactsAdapter adapter;
     private boolean mustHaveNumber;
 
@@ -55,9 +58,11 @@ public class FirstScreen extends BaseController<RecyclerView, List<Contact>, Fir
 
     @Override
     protected void onViewBound(@NonNull View view) {
-        setHasOptionsMenu(true);
         super.onViewBound(view);
+        setHasOptionsMenu(true);
 
+        presenter.setView(this);
+        presenter.fetchContacts(mustHaveNumber);
         adapter = new ContactsAdapter();
         adapter.setOnClickListener(new ContactsAdapter.OnClickListener() {
             @Override
@@ -66,9 +71,23 @@ public class FirstScreen extends BaseController<RecyclerView, List<Contact>, Fir
                         .build());
             }
         });
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+
+        RecyclerView.LayoutManager llm;
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+            llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        else
+            llm = new GridLayoutManager(getActivity(), 3);
+
         contactsRv.setLayoutManager(llm);
         contactsRv.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onDestroyView(View view) {
+        super.onDestroyView(view);
+        presenter.setView(null);
+        adapter = null;
     }
 
     private void setupInjection() {
@@ -122,34 +141,18 @@ public class FirstScreen extends BaseController<RecyclerView, List<Contact>, Fir
     }
 
     @Override
-    public List<Contact> getData() {
-        return adapter.getContacts();
-    }
-
-    @Override
     public void setData(List<Contact> data) {
-        adapter.setContacts(data);
+        this.adapter.setContacts(data);
     }
 
     @Override
-    protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
-        return null;
-    }
+    public void onError(Throwable e) {
 
-    @NonNull
-    @Override
-    public LceViewState<List<Contact>, FirstView> createViewState() {
-        return new RetainingLceViewState<>();
-    }
-
-    @NonNull
-    @Override
-    public FirstScreenPresenter createPresenter() {
-        return presenter;
     }
 
     @Override
-    public void loadData(boolean pullToRefresh) {
-        this.presenter.fetchContacts(mustHaveNumber);
+    public void onCompleted() {
+        progress.setVisibility(View.GONE);
     }
+
 }

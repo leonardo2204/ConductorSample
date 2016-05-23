@@ -9,12 +9,10 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ScrollView;
+import android.widget.ProgressBar;
 
 import com.bluelinelabs.conductor.ControllerChangeHandler;
 import com.bluelinelabs.conductor.ControllerTransaction;
-import com.hannesdorfmann.mosby.mvp.viewstate.lce.LceViewState;
-import com.hannesdorfmann.mosby.mvp.viewstate.lce.data.RetainingLceViewState;
 
 import javax.inject.Inject;
 
@@ -25,7 +23,6 @@ import leonardo2204.com.br.flowtests.conductor.BaseController;
 import leonardo2204.com.br.flowtests.custom.view.EndDrawableTextView;
 import leonardo2204.com.br.flowtests.custom.view.MultiEditableTextView;
 import leonardo2204.com.br.flowtests.di.component.DaggerDetailScreenComponent;
-import leonardo2204.com.br.flowtests.di.component.DetailScreenComponent;
 import leonardo2204.com.br.flowtests.di.module.DetailScreenModule;
 import leonardo2204.com.br.flowtests.model.Contact;
 import leonardo2204.com.br.flowtests.presenter.DetailsScreenPresenter;
@@ -34,7 +31,7 @@ import leonardo2204.com.br.flowtests.view.DetailsView;
 /**
  * Created by Leonardo on 05/03/2016.
  */
-public final class DetailsScreen extends BaseController<ScrollView, Contact, DetailsView, DetailsScreenPresenter> implements DetailsView {
+public final class DetailsScreen extends BaseController implements DetailsView {
 
     private final Contact contact;
     @Inject
@@ -43,6 +40,8 @@ public final class DetailsScreen extends BaseController<ScrollView, Contact, Det
     EndDrawableTextView nameEndDrawableTextView;
     @Bind(R.id.multi_telephone)
     MultiEditableTextView telephoneMultiEditableTextView;
+    @Bind(R.id.loadingView)
+    ProgressBar progress;
     @Nullable
     @Bind(R.id.avatar)
     ImageView avatar;
@@ -61,18 +60,29 @@ public final class DetailsScreen extends BaseController<ScrollView, Contact, Det
     }
 
     @Override
-    protected void onViewBound(@NonNull View view) {
-        super.onViewBound(view);
-        DetailScreenComponent component = DaggerDetailScreenComponent.builder()
+    protected void onCreate() {
+        DaggerDetailScreenComponent.builder()
                 .activityComponent(((RootActivity) getActivity()).getActivityComponent())
                 .detailScreenModule(new DetailScreenModule(contact))
-                .build();
+                .build().inject(this);
+    }
 
-        component.inject(this);
+    @Override
+    protected void onViewBound(@NonNull View view) {
+        super.onViewBound(view);
+
+        presenter.setView(this);
+        presenter.fetchDetailedContact();
 
         if (contact != null) {
             this.nameEndDrawableTextView.setText(contact.getName());
         }
+    }
+
+    @Override
+    protected void onDestroyView(View view) {
+        super.onDestroyView(view);
+        presenter.setView(null);
     }
 
     @Override
@@ -99,11 +109,6 @@ public final class DetailsScreen extends BaseController<ScrollView, Contact, Det
     }
 
     @Override
-    public Contact getData() {
-        return contact;
-    }
-
-    @Override
     public void setData(Contact data) {
         if (data.getTelephone() != null)
             this.telephoneMultiEditableTextView.addItems(data.getTelephone());
@@ -114,24 +119,12 @@ public final class DetailsScreen extends BaseController<ScrollView, Contact, Det
     }
 
     @Override
-    protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
-        return null;
-    }
+    public void onError(Throwable e) {
 
-    @NonNull
-    @Override
-    public LceViewState<Contact, DetailsView> createViewState() {
-        return new RetainingLceViewState<>();
-    }
-
-    @NonNull
-    @Override
-    public DetailsScreenPresenter createPresenter() {
-        return presenter;
     }
 
     @Override
-    public void loadData(boolean pullToRefresh) {
-        this.presenter.fetchDetailedContact();
+    public void onCompleted() {
+        progress.setVisibility(View.GONE);
     }
 }
